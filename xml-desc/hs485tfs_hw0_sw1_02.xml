@@ -1,0 +1,13 @@
+<Modul Kurzbezeichnung="HS485TFS" Bezeichnung="HS485 Temperatur-Feuchte-Sensor" Type="4" hw="0" sw="102" LastChange="20060922">
+	<Sensoren >
+		<Sensor Nr="1" Bezeichnung="Temp/Feuchte" Klemme="" Type="Mess-Eingang"/>
+	</Sensoren>
+	<Aktoren>		
+	</Aktoren>
+	<EEprom Bytes="512">
+	</EEprom>
+	<Modulinformation >
+	</Modulinformation>
+	<Hilfetexte >
+	</Hilfetexte>
+</Modul>

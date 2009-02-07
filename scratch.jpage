@@ -1,0 +1,13 @@
+ConfigUtil.writeDefault();
+ConfigUtil.readConfig(new java.io.FileInputStream("test.xml"));(java.util.LinkedList<E>) [ch.eleveneye.hs485.config.Module@45c1f5b2]
+                                                                                          
+                                                                                          
+The constructor HS485() is undefinedch.eleveneye.hs485.device.Registry.listDevices(new ch.eleveneye.hs485.protocol.HS485("/dev/ttyUSB0",3));An exception occurred during evaluation:  java.lang.UnsatisfiedLinkError
+
+new com.thoughtworks.xstream.XStream(new com.thoughtworks.xstream.io.xml.DomDriver()).fromXML(new com.thoughtworks.xstream.XStream().toXML(new ch.eleveneye.hs485.device.virtual.PIRActor()));
+
+
+new com.thoughtworks.xstream.XStream().toXML(System.getProperties());
+
+
+System.getProperties().list(System.out);

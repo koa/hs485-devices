@@ -1,0 +1,271 @@
+<Modul Kurzbezeichnung="HS485RS" Bezeichnung="HS485 Rolladenschalter" Type="2" hw="1" sw="100" LastChange="20051215">
+	<Sensoren>
+		<Sensor Nr="0" Bezeichnung="Eingang 1" Klemme="2.8" Type="Digital-Eingang"></Sensor>
+		<Sensor Nr="1" Bezeichnung="Eingang 2" Klemme="2.4" Type="Digital-Eingang"></Sensor>
+	</Sensoren>
+	<Aktoren>
+		<Aktor Nr="0" Bezeichnung="Rollladen-Ausgang" Klemme="1.1/1.5 und 2.1/2.5" Type="Rolladen-Ausgang"></Aktor>
+	</Aktoren>
+	<EEprom>
+		<Wert Adresse="0x0000" Bezeichnung="Tastenmode" Type="Option" Laenge="1" Reload="1">
+			<Text Type="Beschreibung">Gibt den Tastenmode der beiden Eingaenge an</Text>
+			<Text Type="Hilfe" Titel="Tastenmode">Das Modul HS485RS besitzt zwei Eingänge. Wird die Option "Zwei einfache Taster" gewählt, könnnen diese als zwei getrennt geschaltete Eingänge genutzt werden. Diese Eingänge können mit den Ausgängen anderer Module verknüpft werden.
+
+Wird die Option "Ein Taster Hoch/Runter" ausgewählt, so kann mit Eingang T2 ein Ausgang ausgeschaltet, bzw. runtergefahren und mit Eingang T1 ein Ausgang eingeschaltet, bzw. hochgefahren werden. Die beiden Tastereingänge gehören also logisch zusammen.</Text>
+			<Option>
+				<Element Value="0x00" Bezeichnung="Zwei einfache Taster"></Element>
+				<Element Value="0x01" Bezeichnung="Ein Taster Hoch/Runter" Default="1"></Element>				
+			</Option>
+		</Wert>
+		<Wert Adresse="0x0003" Bezeichnung="Schaltzeit" Type="Zahl" Laenge="1" Defaultwert="0xFF" Defaultanzeige="120" Anzeigeformat="%d Sek." Eingabeformat="%d" Min="0" Max="254">
+			<Text Type="Beschreibung">Hier wird die maximale Schaltzeit in Sekunden eintragen.</Text>
+			<Text Type="Hilfe" Titel="Schaltzeit">Die maximale Schaltzeit ist die Zeit, nach der die Relais-Ausgänge abgeschaltet werden. Dies dient als Sicherheit gegen evtl. defekte Endschalter etc. Wird die Zeit auf 0 Sekunden eingestellt, so ist diese Zeit-Option abgeschaltet. Wird auf Schlitz gefahren, ist dies die Zeit, die die Rolllade zunächst herunterfährt, bevor sie für die Schlitzzeit wieder hochgefahren wird. </Text>
+		</Wert>
+		<Wert Adresse="0x0004" Bezeichnung="Schlitzzeit" Type="Zahl" Laenge="1" Defaultwert="0xFF" Defaultanzeige="10" Anzeigeformat="%d Sek." Eingabeformat="%d" Min="0" Max="254">
+			<Text Type="Beschreibung">Hier wird die Schlitzzeit eingetragen.</Text>
+			<Text Type="Hilfe" Titel="Schlitzzeit">Wenn eine Rolllade nur halb geöffnet sein soll, kann eine Schlitzzeit eingetragen werden. Die Schlitzzeit ist die Zeit, die die heruntergefahrene Rolllade wieder hochfährt, um eine halb geöffnete Rollladenstellung zu erreichen. Die Rolllade wird zunächst heruntergefahren und danach wieder für die Schlitzzeit hochgefahren.
+Um bei einem Rollladenschalter diese Funktion zu aktivieren, betätigen Sie eine auf dieses Modul programmierter "Runter" Taste, so dass sich die Rolllade schließt. Jetzt betätigen Sie diese Taste noch einmal kurz. Die Rolllade fährt weiterhin nach unten. Nach Ablauf der maximalen Schaltzeit fährt die Rolllade für die Schlitzzeit wieder hoch. 
+			</Text>
+		</Wert>
+		<Wert Adresse="0x000A" Bezeichnung="Toggle-Bit" Type="Bit" Laenge="1" Reload="1">
+			<Text Type="Beschreibung">Das Toggle-Bit gibt an, ob der Schalt-Ausgang auf das Toggle-Bit eines geschalteten Taster-Eingangs reagieren soll.</Text>
+			<Text Type="Hilfe" Titel="Toggle-Bit">Jeder Taster-Eingang besitzt ein Bit, das bei jedem Tastendruck seinen Zustand ändert, dieses Bit wird mit an jeden programmierten Ausgang übertragen. Ist beim Ausgang "auf Toggle-Bit reagieren" markiert, so nimmt der Ausgang den Zustand des übertragenen Bit´s an. Dies ist z.B. dann sinnvoll, wenn man mit einem Taster viele Aktoren gleichzeitig ein- oder ausschalten möchte. Wird das Toggle-Bit deaktiviert, so wechselt der Ausgang nur seinen Zustand (z.B von An nach Aus). Dies ist z.B. in einem Treppenhaus sinnvoll, bei dem die verschiedene Taster an unterschiedliche Module angschlossen sind. </Text>
+			<Bit>
+				<Element Bit="0" Bezeichnung="Toggle-Bit nutzen"></Element>
+			</Bit>
+		</Wert>
+		<Wert Adresse="0x0010" Bezeichnung="Zuordnung Taster-Eingang T1" Type="Option" Laenge="1" Hilfe="3">
+			<Option>
+				<Element Value="0xFE" Bezeichnung="nicht konfiguriert"></Element>
+				<Element Value="0xFF" Bezeichnung="Auf Ausgang dieses Moduls geschaltet" Default="1"></Element>
+			</Option>
+		</Wert>
+		<Wert Adresse="0x0011" Bezeichnung="Zuordnung Taster-Eingang T2" Type="Option" Laenge="1" Hilfe="3">
+			<Option>
+				<Element Value="0xFE" Bezeichnung="nicht konfiguriert"></Element>
+				<Element Value="0xFF" Bezeichnung="Auf Ausgang dieses Moduls geschaltet" Default="1"></Element>
+			</Option>
+		</Wert>
+		<Wert Adresse="0x0080" Bezeichnung="Ziel 1 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 1 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 1 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 2 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 2 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 2 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 3 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 3 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 3 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 4 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 4 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 4 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 5 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 5 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 5 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 6 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 6 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 6 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 7 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 7 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 7 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 8 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 8 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 8 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 9 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 9 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 9 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 10 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 10 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 10 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 11 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 11 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 11 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 12 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 12 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 12 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 13 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 13 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 13 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 14 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 14 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 14 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 15 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 15 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 15 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 16 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 16 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 16 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 17 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 17 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 17 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 18 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 18 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 18 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 19 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 19 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 19 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 20 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 20 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 20 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 21 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 21 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 21 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 22 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 22 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 22 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 23 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 23 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 23 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 24 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 24 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 24 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 25 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 25 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 25 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 26 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 26 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 26 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 27 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 27 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 27 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 28 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 28 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 28 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 29 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 29 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 29 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 30 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 30 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 30 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 31 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 31 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 31 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 32 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 32 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 32 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 33 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 33 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 33 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 34 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 34 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 34 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 35 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 35 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 35 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 36 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 36 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 36 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 37 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 37 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 37 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 38 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 38 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 38 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 39 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 39 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 39 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 40 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 40 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 40 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 41 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 41 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 41 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 42 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 42 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 42 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 43 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 43 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 43 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 44 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 44 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 44 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 45 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 45 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 45 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 46 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 46 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 46 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 47 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 47 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 47 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 48 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 48 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 48 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 49 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 49 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 49 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 50 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 50 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 50 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 51 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 51 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 51 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 52 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 52 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 52 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 53 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 53 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 53 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 54 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 54 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 54 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 55 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 55 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 55 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 56 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 56 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 56 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 57 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 57 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 57 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 58 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 58 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 58 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 59 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 59 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 59 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 60 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 60 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 60 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 61 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 61 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 61 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 62 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 62 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 62 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 63 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 63 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 63 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 64 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1"></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 64 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1"></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 64 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4"></Wert>
+	</EEprom>
+	<Modulinformation>
+		<Abschnitt Nr="1" Titel="Allgemeines">Das Schaltermodul HS485 RS besitzt zwei gegeneinander verriegelte Schalt-Ausgänge, sowie zwei unabhängige Taster-Eingänge. Die Schaltzeit der Relais kann auf eine feste Zeit (max. 254 Sek.) begrenzt werden, um eine evtl. Zerstörung oder Beschädigung der angeschlossenen Motoren im Fehlerfall zu verhindern. Bei der Nutzung einer Rolllade kann es erwünscht sein, diese nur bis zu einer einstellbaren Höhe zu schließen. Dazu kann eine so genannte Schlitzzeit eingestellt werden. </Abschnitt>
+		<Abschnitt Nr="2" Titel="Schalt-Ausgänge">Die beiden Schaltausgänge sind zur Ansteuerung von elektromechanischen Antrieben (z.B. Rollladen, Markiesen etc.) vorgesehen. Die Ausgänge sind gegeneinander verriegelt, so dass immer nur ein Ausgang aktiv sein kann.</Abschnitt>
+		<Abschnitt Nr="3" Titel="Taster-Eingänge">Die Eingänge können wahlweise als zwei getrennte Taster-Eingänge oder als ein logischer Eingang angesehen werden. In der Standardkonfiguration sind die Eingänge zu einer logischen Einheit zusammengefasst.</Abschnitt>
+	</Modulinformation>
+	<Hilfetexte>
+		<Hilfe Nr="1">
+			<Text Type="Beschreibung">Taster-Eingang auswaehlen, der programmiert werden soll.</Text>
+			<Text Type="Hilfe" Titel="Zuordnung von Taster-Eingängen zu Schalt-Ausgaengen anderer Module">Soll ein Schalt-Ausgang an einem anderen Modul programmiert werden, so muß:
+* der Eingang an diesem Modul ausgewählt werden, der den Schalt-Ausgang schalten soll,
+* die Adresse des Moduls mit dem gewünschten Schalt-Ausgang eingetragen werden und
+* die richtige Schalt-Ausgang am Empfänger-Modul gewaehlt werden. 
+
+Es können bis zu 64 Empfänger eingetragen werden.</Text>
+		</Hilfe>
+		<Hilfe Nr="2">			
+			<Text Type="Hilfe" Titel="Schaltzeit">Je nach Konfiguration des Ausgangs wird die Zeit anders verwendet. 
+Ist die Einstellung auf "Kein Timer", so wird die Zeit ignoriert.
+Auf Einstellung "Treppenhaus" wird der Aktor nach einer festen Zeit wieder ausgeschaltet. Bei jedem Tastendruck auf einen auf diesen Ausgang programmieren Taster wird die Zeit neu gestartet. 
+Bei der Einstellung "Automatisch ausschalten" kann der Ausgang wie ein bei "kein Timer" genutzt werden, der Ausgang wird jedoch nach der eingestellten Zeit automatisch ausgeschaltet.</Text>
+		</Hilfe>
+		<Hilfe Nr="3">
+			<Text Type="Beschreibung">Zuordnung der Taster-Eingänge zum Rollladen-Ausgang dieses Moduls</Text>
+			<Text Type="Hilfe" Titel="Zuordnung der Taster-Eingänge zum Rollladen-Ausgang dieses Moduls">Hier kann eine Zuordnung der Taster-Eingänge zum Rollladen-Ausgang an diesem Modul erfolgen. 
+Sind die Taster-Eingänge als getrennte Eingänge konfiguriert, so kann auch jeder Eingang mit dem Ausgang verknüpft werden. 
+Sind die Eingänge zu einer logischen Einheit zusammengefasst, so wird die Zuordnung von T2 ignoriert.</Text>
+		</Hilfe>
+	</Hilfetexte>
+</Modul>
+

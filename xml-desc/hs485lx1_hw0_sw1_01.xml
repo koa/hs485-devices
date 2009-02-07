@@ -1,0 +1,571 @@
+ <Modul Kurzbezeichnung="HS485LX1" Bezeichnung="HS485 Lux-Sensor" Type="8" hw="0" sw="101" LastChange="20051219">
+	<Sensoren >
+		<Sensor Nr="0" Bezeichnung="Gerätzustand senden" " Type="Virtuell" ></Sensor>
+		<Sensor Nr="2" Bezeichnung="Kanal1" Klemme="" Type="Grenzwert-Überschreitung" ></Sensor>
+		<Sensor Nr="3" Bezeichnung="Kanal2" Klemme="" Type="Grenzwert-Überschreitung" ></Sensor>
+		<Sensor Nr="4" Bezeichnung="Kanal3" Klemme="" Type="Grenzwert-Überschreitung" ></Sensor>
+		<Sensor Nr="5" Bezeichnung="Kanal4" Klemme="" Type="Grenzwert-Überschreitung" ></Sensor>
+		
+	</Sensoren>
+	<Aktoren >
+		<Aktor Nr="0" Bezeichnung="Gerät Ein/Aus" " Type="Virtuell"/>
+	</Aktoren>
+	<EEprom Bytes="512" >
+
+		<Wert Adresse="0x0040" Bezeichnung="Einschaltverhalten des Sensors" Type="Option" Laenge="1" Reload="0" Hilfe="2" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="Bei Inbetriebnahme aktivieren" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="Bei Inbetriebnahme deaktivieren" ></Element>
+			</Option>
+		</Wert>
+		
+		<Wert Adresse="0x0041" Bezeichnung="Gerätezustand nach anlegen der Betriebsspannung senden" Type="Option" Laenge="1" Reload="0" Hilfe="3" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="Zustand bei Inbetriebnahme nicht senden" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="Zustand bei Inbetriebnahme senden" ></Element>
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x0020" Bezeichnung="Schaltschwelle Kanal 1" Type="Zahl" Laenge="4" Reload="1" Min="0" Max="200000" Defaultwert="0xFFFFFFFF" Defaultanzeige="200000" Anzeigeformat="%u LUX" Eingabeformat="%u" Endian="Little" Hilfe="4" ></Wert>
+		
+		
+		<Wert Adresse="0x0030" Bezeichnung="Schaltrichtung Kanal 1" Type="Option" Laenge="1" Reload="1" Hilfe="5" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="dunkler->ein; heller->aus" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="dunkler->aus; heller->ein" ></Element>
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x003C" Bezeichnung="Ausschaltverhalten Kanal 1" Type="Option" Laenge="1" Reload="1" Hilfe="6" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="Aktoren beim Ausschalten aus" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="Aktoren beim Ausschalten ein" ></Element>
+			</Option>
+		</Wert>
+		
+		<Wert Adresse="0x0034" Bezeichnung="Hysterese Kanal 1" Type="Option" Laenge="1" Reload="1" Hilfe="7" >
+			<Option >
+				<Element Value="0" Bezeichnung=" 0%"></Element>
+				<Element Value="1" Bezeichnung=" 1%"></Element>
+				<Element Value="5" Bezeichnung=" 5%"></Element>
+				<Element Value="0xFF" Bezeichnung="10%" Default="1" ></Element>
+				<Element Value="20"   Bezeichnung="20%"></Element>
+				<Element Value="30"   Bezeichnung="30%"></Element>
+				<Element Value="40"   Bezeichnung="40%"></Element>
+				<Element Value="50"   Bezeichnung="50%"></Element>
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x0038" Bezeichnung="Schaltverzögerung Kanal 1" Type="Option" Laenge="1" Reload="1" Hilfe="8" >
+			<Option >
+				<Element Value="0"    Bezeichnung="  Keine"></Element>
+				<Element Value="1"    Bezeichnung="  1 Minute"></Element>
+				<Element Value="2"    Bezeichnung="  2 Minuten"></Element>
+				<Element Value="3"    Bezeichnung="  3 Minuten"></Element>
+				<Element Value="0xFF" Bezeichnung="  4 Minuten" Default="1" ></Element>
+				<Element Value="5"    Bezeichnung="  5 Minuten"></Element>
+				<Element Value="10"   Bezeichnung=" 10 Minuten"></Element>
+				<Element Value="15"   Bezeichnung=" 15 Minuten"></Element>
+				<Element Value="30"   Bezeichnung=" 30 Minuten"></Element>
+				<Element Value="60"   Bezeichnung=" 60 Minuten"></Element>
+			</Option>
+		</Wert>
+
+
+
+
+		<Wert Adresse="0x0024" Bezeichnung="Schaltschwelle Kanal 2" Type="Zahl" Laenge="4" Reload="1" Min="0" Max="200000" Defaultwert="0xFFFFFFFF" Defaultanzeige="200000" Anzeigeformat="%u LUX" Eingabeformat="%u" Endian="Little" Hilfe="4" ></Wert>
+
+		<Wert Adresse="0x0031" Bezeichnung="Schaltrichtung Kanal 2" Type="Option" Laenge="1" Reload="1" Hilfe="5" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="dunkler->ein; heller->aus" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="dunkler->aus; heller->ein" ></Element>
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x003D" Bezeichnung="Ausschaltverhalten Kanal 2" Type="Option" Laenge="1" Reload="1" Hilfe="6" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="Aktoren beim Ausschalten aus" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="Aktoren beim Ausschalten ein" ></Element>
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x0035" Bezeichnung="Hysterese Kanal 2" Type="Option" Laenge="1" Reload="1" Hilfe="7" >
+			<Option >
+				<Element Value="0" Bezeichnung=" 0%"></Element>
+				<Element Value="1" Bezeichnung=" 1%"></Element>
+				<Element Value="5" Bezeichnung=" 5%"></Element>
+				<Element Value="0xFF" Bezeichnung="10%" Default="1" ></Element>
+				<Element Value="20"   Bezeichnung="20%"></Element>
+				<Element Value="30"   Bezeichnung="30%"></Element>
+				<Element Value="40"   Bezeichnung="40%"></Element>
+				<Element Value="50"   Bezeichnung="50%"></Element>
+
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x0039" Bezeichnung="Schaltverzögerung Kanal 2" Type="Option" Laenge="1" Reload="1" Hilfe="8" >
+			<Option >
+				<Element Value="0"    Bezeichnung="  Keine"></Element>
+				<Element Value="1"    Bezeichnung="  1 Minute"></Element>
+				<Element Value="2"    Bezeichnung="  2 Minuten"></Element>
+				<Element Value="3"    Bezeichnung="  3 Minuten"></Element>
+				<Element Value="0xFF" Bezeichnung="  4 Minuten" Default="1" ></Element>
+				<Element Value="5"    Bezeichnung="  5 Minuten"></Element>
+				<Element Value="10"   Bezeichnung=" 10 Minuten"></Element>
+				<Element Value="15"   Bezeichnung=" 15 Minuten"></Element>
+				<Element Value="30"   Bezeichnung=" 30 Minuten"></Element>
+				<Element Value="60"   Bezeichnung=" 60 Minuten"></Element>
+
+
+			</Option>
+		</Wert>
+
+
+
+
+		<Wert Adresse="0x0028" Bezeichnung="Schaltschwelle Kanal 3" Type="Zahl" Laenge="4" Reload="1" Min="0" Max="200000" Defaultwert="0xFFFFFFFF" Defaultanzeige="200000" Anzeigeformat="%u LUX" Eingabeformat="%u" Endian="Little" Hilfe="4" ></Wert>
+
+		<Wert Adresse="0x0032" Bezeichnung="Schaltrichtung Kanal 3" Type="Option" Laenge="1" Reload="1" Hilfe="5" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="dunkler->ein; heller->aus" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="dunkler->aus; heller->ein" ></Element>
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x003E" Bezeichnung="Ausschaltverhalten Kanal 3" Type="Option" Laenge="1" Reload="1" Hilfe="6" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="Aktoren beim Ausschalten aus" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="Aktoren beim Ausschalten ein" ></Element>
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x0036" Bezeichnung="Hysterese Kanal 3" Type="Option" Laenge="1" Reload="1" Hilfe="7" >
+			<Option >
+				<Element Value="0" Bezeichnung=" 0%"></Element>
+				<Element Value="1" Bezeichnung=" 1%"></Element>
+				<Element Value="5" Bezeichnung=" 5%"></Element>
+				<Element Value="0xFF" Bezeichnung="10%" Default="1" ></Element>
+				<Element Value="20"   Bezeichnung="20%"></Element>
+				<Element Value="30"   Bezeichnung="30%"></Element>
+				<Element Value="40"   Bezeichnung="40%"></Element>
+				<Element Value="50"   Bezeichnung="50%"></Element>
+
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x003A" Bezeichnung="Schaltverzögerung Kanal 3" Type="Option" Laenge="1" Reload="1" Hilfe="8" >
+			<Option >
+				<Element Value="0"    Bezeichnung="  Keine"></Element>
+				<Element Value="1"    Bezeichnung="  1 Minute"></Element>
+				<Element Value="2"    Bezeichnung="  2 Minuten"></Element>
+				<Element Value="3"    Bezeichnung="  3 Minuten"></Element>
+				<Element Value="0xFF" Bezeichnung="  4 Minuten" Default="1" ></Element>
+				<Element Value="5"    Bezeichnung="  5 Minuten"></Element>
+				<Element Value="10"   Bezeichnung=" 10 Minuten"></Element>
+				<Element Value="15"   Bezeichnung=" 15 Minuten"></Element>
+				<Element Value="30"   Bezeichnung=" 30 Minuten"></Element>
+				<Element Value="60"   Bezeichnung=" 60 Minuten"></Element>
+
+			</Option>
+		</Wert>
+
+
+
+
+
+		<Wert Adresse="0x002C" Bezeichnung="Schaltschwelle Kanal 4" Type="Zahl" Laenge="4" Reload="1" Min="0" Max="200000" Defaultwert="0xFFFFFFFF" Defaultanzeige="200000" Anzeigeformat="%u LUX" Eingabeformat="%u" Endian="Little" Hilfe="4" ></Wert>
+				
+		<Wert Adresse="0x0033" Bezeichnung="Schaltrichtung Kanal 4" Type="Option" Laenge="1" Reload="1" Hilfe="5" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="dunkler->ein; heller->aus" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="dunkler->aus; heller->ein" ></Element>
+			</Option>
+		</Wert>
+
+		<Wert Adresse="0x003F" Bezeichnung="Ausschaltverhalten Kanal 4" Type="Option" Laenge="1" Reload="1" Hilfe="6" >
+			<Option >
+				<Element Value="0xFF" Bezeichnung="Aktoren beim Ausschalten aus" Default="1" ></Element>
+				<Element Value="0x02" Bezeichnung="Aktoren beim Ausschalten ein" ></Element>
+			</Option>
+		</Wert>
+				
+		<Wert Adresse="0x0037" Bezeichnung="Hysterese Kanal 4" Type="Option" Laenge="1" Reload="1" Hilfe="7" >
+			<Option >
+				<Element Value="0" Bezeichnung=" 0%"></Element>
+				<Element Value="1" Bezeichnung=" 1%"></Element>
+				<Element Value="5" Bezeichnung=" 5%"></Element>
+				<Element Value="0xFF" Bezeichnung="10%" Default="1" ></Element>
+				<Element Value="20"   Bezeichnung="20%"></Element>
+				<Element Value="30"   Bezeichnung="30%"></Element>
+				<Element Value="40"   Bezeichnung="40%"></Element>
+				<Element Value="50"   Bezeichnung="50%"></Element>
+
+			</Option>
+		</Wert>
+				
+		<Wert Adresse="0x003B" Bezeichnung="Schaltverzögerung Kanal 4" Type="Option" Laenge="1" Reload="1" Hilfe="8" >
+			<Option >
+				<Element Value="0"    Bezeichnung="  Keine"></Element>
+				<Element Value="1"    Bezeichnung="  1 Minute"></Element>
+				<Element Value="2"    Bezeichnung="  2 Minuten"></Element>
+				<Element Value="3"    Bezeichnung="  3 Minuten"></Element>
+				<Element Value="0xFF" Bezeichnung="  4 Minuten" Default="1" ></Element>
+				<Element Value="5"    Bezeichnung="  5 Minuten"></Element>
+				<Element Value="10"   Bezeichnung=" 10 Minuten"></Element>
+				<Element Value="15"   Bezeichnung=" 15 Minuten"></Element>
+				<Element Value="30"   Bezeichnung=" 30 Minuten"></Element>
+				<Element Value="60"   Bezeichnung=" 60 Minuten"></Element>
+
+			</Option>
+		</Wert>
+		
+
+
+				
+		<Wert Adresse="0x0080" Bezeichnung="Ziel 1 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 1 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 1 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 2 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 2 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 2 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 3 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 3 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 3 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 4 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 4 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 4 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 5 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 5 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 5 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 6 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 6 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 6 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 7 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 7 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 7 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 8 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 8 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 8 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 9 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 9 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 9 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 10 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 10 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 10 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 11 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 11 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 11 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 12 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 12 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 12 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 13 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 13 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 13 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 14 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 14 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 14 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 15 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 15 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 15 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 16 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 16 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 16 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 17 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 17 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 17 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 18 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 18 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 18 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 19 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 19 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 19 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 20 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 20- Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 20 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 21 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 21 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 21 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 22 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 22 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 22 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 23 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 23 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 23 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 24 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 24 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 24 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 25 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 25 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 25 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 26 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 26 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 26 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 27 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 27 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 27 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 28 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 28 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 28 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 29 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 29 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 29 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 30 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 30 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 30 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 31 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 31 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 31 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 32 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 32 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 32 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 33 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 33 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 33 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 34 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 34 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 34 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 35 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 35 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 35 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 36 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 36 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 36 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 37 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 37 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 37 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 38 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 38 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 38 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 39 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 39 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 39 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 40 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 40 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 40 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 41 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 41 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 41 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 42 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 42 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 42 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 43 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 43 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 43 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 44 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 44 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 44 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 45 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 45 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 45 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 46 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 46 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 46 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 47 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 47 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 47 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 48 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 48 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 48 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 49 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 49 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 49 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 50 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 50 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 50 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 51 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 51 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 51 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 52 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 52 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 52 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 53 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 53 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 53 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 54 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 54 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 54 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 55 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 55 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 55 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 56 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 56 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 56 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 57 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 57 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 57 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 58 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 58 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 58 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 59 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 59 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 59 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 60 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 60 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 60 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 61 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 61 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 61 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 62 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 62 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 62 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 63 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 63 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 63 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 64 - Eingang" Type="Zahl" Laenge="1" Spezial="Sensor" Hilfe="1" ></Wert>
+		<Wert Adresse="+1" Bezeichnung="Ziel 64 - Adresse" Type="Zahl" Laenge="4" Eingabeformat="0x%08x" Spezial="Adresse" Hilfe="1" ></Wert>
+		<Wert Adresse="+4" Bezeichnung="Ziel 64 - Aktor" Type="Zahl" Laenge="1" Hilfe="1" Spezial="Aktor" Ziel="-4" ></Wert>
+	</EEprom>
+
+<Modulinformation >
+
+<Abschnitt Nr="1" Titel="Allgemeines" >
+Der HS485 Lux-Sensor HS485 LX1 besitzt vier unabhängige Schaltkanäle. Jeder Kanal kann separat konfiguriert werden.
+und mit jedem Kanal können mehrere Aktoren geschaltet werden.
+Zusätzlich verfügt der HS485 LX1 über einen "Kanal", der den Gerätezustand an einen Aktor melden kann. Mit diesem
+"Kanal" kann z. B. eine Kontroll-Leuchte angesteuert werden, die den Betriebszustand des HS485 LX1 anzeigt.
+Der Lux Sensor kann auch über einen Taster, der an einem anderen Modul angeschlossen wird, ein- und ausgeschaltet 
+werden. Dafür ist bei dem entsprechenden Modul (an dem der Taster angeschlossen ist) die Adresse des HS485 LX1 als 
+Ziel für den Taster-Eingang auszuwählen, als Aktor wird "Gerät Ein/Aus" ausgewählt.
+</Abschnitt>
+
+		
+<Abschnitt Nr="2" Titel="Taster" > 
+Der Taster am Modul dient zur Konfiguration des HS485 LX1 ohne Konfigurationssoftware. 
+Durch kurzes Betätigen des Tasters wird ein Schaltbefehl für Kanal 1 ausgelöst, somit lassen sich Module, die zuvor in den 
+Anlernmodus gebracht wurden, am Lux-Sensor anlernen. 
+Durch Längeres Betätigen der Taste wird das Modul in den Schaltwert-Messmodus für Kanal 1 gebracht. Hierbei wird nach 
+ca. 30 Sekunden, in denen der Gehäusedeckel wieder angebracht werden muss, die Helligkeit gemessen und als Schwellwert 
+für Kanal 1 eingetragen. Mit dem PC-Interface und der Konfigurationssoftware können die Einstellungen für alle vier 
+Kanäle bequem mite dem PC gemacht werden, so dass in diesem Fall der Taster nicht benötigt wird.
+</Abschnitt>
+
+</Modulinformation>
+
+<Hilfetexte >
+
+<Hilfe Nr="1" >
+<Text Type="Beschreibung" >Kanal oder Greätestatus auswählen.</Text>
+<Text Type="Hilfe" Titel="Zuordnung von Schaltkanälen oder Gerätestatus zu Schalt-Ausgängen anderer Module" >
+Soll ein Schalt-Ausgang an einem anderen Modul programmiert werden, so muß :
+* ein Kanal oder der Gerätestatus an diesem Modul ausgewählt werden, der den Schalt-Ausgang schalten soll,
+* die Adresse des Moduls mit dem gewünschten Schalt-Ausgang eingetragen werden und
+* die richtige Schalt-Ausgang am Empfänger-Modul gewählt werden. 
+
+Mit dem Gerätestatus kann der an einem Aktor eines anderen Moduls (an dem z. B. eine Leuchtdiode angeschlossen ist) 
+der Zustand (Ein- oder Ausgeschaltet) des Lux-Sensors zur Kontrolle angezeigt werden.
+
+
+Es können bis zu 64 Empfänger eingetragen werden. 
+</Text>
+
+</Hilfe>
+<Hilfe Nr="2" >
+<Text Type="Beschreibung" >Einschaltverhalten des Sensors einstellen.</Text>
+<Text Type="Hilfe" Titel="Einschaltverhalten des Sensors einstellen" >
+Hier wird festgelegt wie sich das Gerät beim Einschalten (der Betriebsspannung) verhält:
+Diese Einstellung gilt für das Gesamte Gerät, nicht für einzelne Kanäle. Sie wirkt sich nur auf das Verhalten des Sensors 
+nach dem Anlegen der Betriebsspannung aus. Wichtig ist dies nach der Montage oder nach einem Stromausfall.
+
+* Bei Inbetriebnahme aktivieren
+  Diese Funktion muss auf jeden Fall gewählt werden, wenn kein Taster zum Ein- und Ausschalten des Sensors verwendet 
+  werden soll. Der Sensor ist nach dem Anlegen der Bestriebsspannung aktiviert und schaltet andere Aktoren gemäß 
+  der Konfiguration.
+* Bei Inbetriebnahme deaktivieren
+  In diesem Fall ist der Sensor nach dem Anlegen der Betriebsspannung nicht aktiv. Er kann durch einen Schalteingang 
+  eines anderen Moduls ein- und ausgeschaltet werden, dazu ist der Sensor einem entsprechenden Eingang als Aktor 
+  zuzuordnen.	
+</Text>
+</Hilfe>
+
+
+<Hilfe Nr="3" >
+<Text Type="Beschreibung" >Gerätezustand nach dem Einschalten senden.</Text>
+<Text Type="Hilfe" Titel="Gerätezustand nach dem Einschalten senden." >
+Hier wird festgelegt ob der Gerätezustand nach dem Einschalten gesendet wird:
+Diese Einstellung gilt für das Gesamte Gerät, nicht für einzelne Kanäle. Sie wirkt sich nur auf das Verhalten des Sensors 
+nach dem Anlegen der Betriebsspannung aus. Wichtig ist dies nach der Montage oder nach einem Stromausfall.
+
+* Zustand bei Inbetriebnahme senden
+  Der Sensor meldet nach dem Anlegen der Betriebspannung seinen aktuellen Zustand (aktiviert oder deaktiviert)
+  an den entsprechend ausgewählten Aktor.
+  Dieser Punkt muss ausgewählt werden, damit sichergestellt ist, dass einer Kontroll-LED, die den Zustand des Gerätes anzeigt,
+  auch nach einem Stromausfall der richtge Zustand gemeldet wird.
+* Zustand bei Inbetriebnahm nicht senden
+  In diesem Fall wird der Zustand nur nach dem Ein- oder Ausschalten gemeldet.
+</Text>
+</Hilfe>
+
+
+<Hilfe Nr="4" >
+<Text Type="Beschreibung" >Helligkeit einstellen, bei der dieser Kanal geschaltet wird.</Text>
+<Text Type="Hilfe" Titel="Helligkeit einstellen, bei der dieser Kanal geschaltet wird." >
+Für jeden der vier Kanäle kann ein Schaltschwelle eingestellt werden, bei deren Erreichen ein Schaltvorgang ausgelöst wird.
+Bei der Eingabe ist folgendes zu beachten:
+* Es können direkte Werte zwischen 1 un 199.999 Lux eingetragen werden, die als Schaltwert verwendet werden.
+* Wird der Wert auf 200.000 gesetzt, werden die Schaltvorgänge für diesen Kanal deaktiviert.
+* Eird der Wert auf 0 gesetzt, wird die aktuell gemessene Helligkeit als Schaltwert eingetragen. Der ermittelte Wert wird 
+  nach erneutem Laden der Daten angezeigt.
+</Text>
+</Hilfe>
+
+
+<Hilfe Nr="5" >
+<Text Type="Beschreibung" >Schaltrichtung für diesen Kanal einstellen.</Text>
+<Text Type="Hilfe" Titel="Schaltrichtung für diesen Kanal einstellen." >
+Für jeden Kanal kann eine Schaltrichtung festgelegt werden, die bestimmt, ob die zu schaltenden Aktoren beim Überschreiten 
+eines bestimmten Helligkeitswertes ein- bzw. ausgeschaltet, und beim Unterschreiten des eingestellten Wertes entsprechend 
+wieder aus- bzw. eingeschaltet werden.
+* dunkler->ein; heller->aus: 
+  Wenn der eingestellte Schaltwert für die Helligkeit unterschritten wird, werden Einschaltbefehle an die Aktoren gesendet. 
+  Wird der eingestellte Schaltwert überschritten werden Ausschaltbefehle gesendet.
+* dunkler->aus; heller->ein: 
+  Wenn der eingestellte Schaltwert für die Helligkeit unterschritten wird, werden Ausschaltbefehle an die Aktoren gesendet. 
+  Wird der eingestellte Schaltwert überschritten werden Einschaltbefehle gesendet.
+</Text>
+</Hilfe>
+
+
+<Hilfe Nr="6" >
+<Text Type="Beschreibung" >Ausschaltverhalten für diesen Kanal einstellen.</Text>
+<Text Type="Hilfe" Titel="Ausschaltverhalten für diesen Kanal einstellen." >
+Hier wird festgelegt, ob die Aktoren, die diesem Kanal zugeordnet sind, beim Deaktivieren des Sensors ein oder ausgeschaltet werden:
+
+* Aktoren beim Ausschalten aus
+  Wird der Sensor mit einem Taster deaktiviert, werden die Module die dem Kanal zugeordnet sind ausgeschaltet	
+* Aktoren beim Ausschalten ein
+  Wird der Sensor mit einem Taster deaktiviert, werden die Module die dem Kanal zugeordnet sind eingeschaltet
+</Text>
+</Hilfe>
+
+
+<Hilfe Nr="7" >
+<Text Type="Beschreibung" >Hysterese zur Vermeidung ungewollter Schaltvorgänge.</Text>
+<Text Type="Hilfe" Titel="Hysterese zur Vermeidung ungewollter Schaltvorgänge." >
+Mit diesem Paramaeter wird die Schalt-Hysterese für den jeweiligen Kanal eingestellt. 
+Mit ihr werden Schaltvorgänge vehindert, wenn die Helligkeit um den eingestellten Schaltwert schwankt.
+Wenn beim HS485 LX1 vom überschreiten des Schaltwertes gespochen wird, so ist das Überschreiten des als Schaltwert 
+eingetragenen Wertes gemeint. Der Wert der unterschritten werden muss um einen Schaltvorgang auszulösen kann je nach 
+gewählter Schalthysterese vom eingestellten Schaltwert abweichen.
+Beispiel: Es werden ein Schaltwert von 1000 Lux, eine Hysterese von 20 % und das Schaltverhalten "dunkler->ein; heller->aus" 
+eingestellt. Wird eine Helligkeit von 1000 Lux erreicht, wird ein Ausschaltbefehl gesendet. Ein Einschaltbefehl wird erst 
+gesendet wenn die gemessene Helligkeit unter 800 Lux (1000 Lux - 20%) abfällt.
+Diese Einstellung verhindert das ungewollte Ein- und Ausschalten bei Helligkeiten die sich nur langsam ändern.
+</Text>
+</Hilfe>
+
+
+<Hilfe Nr="8" >
+<Text Type="Beschreibung" >Schaltverzögerung für diesen Kanal einstellen.</Text>
+<Text Type="Hilfe" Titel="Schaltverzögerung für diesen Kanal einstellen." >
+Diese Option gibt an wie lange die Helligkeit dauerhaft oberhalb des eingestellten Schwellwertes bzw. unterhalb des des eingestellten 
+Schwellwertes abzüglich der Schalthysterese liegen muss bevor ein Schaltvorgang ausgelöst wird.
+Bei der Steuerung der Außenbeleuchtung verhindert eine entsprechend hohe Einstellung, dass die Beleuchtung ausgeschaltet wird, wenn der 
+Sensor nur kurz, z. B. von einem Autosc
+heinwerfer oder einer Taschenlampe, angestrahlt wird.
+</Text>
+</Hilfe>
+
+
+</Hilfetexte>
+</Modul>
