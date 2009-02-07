@@ -8,7 +8,7 @@
 	<description>Geräte</description>
 	<scm>
 		<connection>
-			scm:svn:http://venus.intern.eleveneye.ch/svn/eleveneye/trunk/HS485/HS485-Devices
+			scm:svn:http://neptun.berg.local/svn/HS485/devices/trunk
 		</connection>
 	</scm>
 	<build>
@@ -22,6 +22,13 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav</artifactId>
+				<version>1.0-beta-2</version>
+			</extension>
+		</extensions>
 	</build>
 	<dependencies>
 		<dependency>
@@ -34,59 +41,55 @@
 			<artifactId>comm</artifactId>
 			<version>0.5.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
-		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
+			<id>snapshots</id>
+			<name>Archiva Managed Snapshot Repository</name>
+			<url>http://neptun.berg.local/archiva/repository/snapshots/
+			</url>
 			<releases>
 				<enabled>false</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
 			</releases>
 			<snapshots>
 				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
 			</snapshots>
-			<id>eleveneye-snapshot</id>
-			<name>Eleveneye Snapshots</name>
-			<url>http://venus.intern.eleveneye.ch/maven/snapshot</url>
-			<layout>default</layout>
 		</repository>
 		<repository>
+			<id>releases</id>
+			<name>Archiva Releases</name>
+			<url>http://neptun.berg.local/archiva/repository/releases/
+			</url>
 			<releases>
 				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
 			</releases>
 			<snapshots>
 				<enabled>false</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
 			</snapshots>
-			<id>eleveneye-release</id>
-			<name>Eleveneye Release</name>
-			<url>http://venus.intern.eleveneye.ch/maven/releases</url>
-			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>internal</id>
+			<name>Archiva Managed Internal Repository</name>
+			<url>http://neptun.berg.local/archiva/repository/internal/
+			</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 	<distributionManagement>
-		<!-- use the following if you're not using a snapshot version.-->
-		<repository>
-			<id>eleveneye</id>
-			<name>Repository Name</name>
-			<url>file:///var/www/maven/release</url>
-		</repository>
-		<!-- use the following if you ARE using a snapshot version -->
 		<snapshotRepository>
-			<layout>default</layout>
-			<id>eleveneye</id>
-			<name>Repository Name</name>
-			<url>file:///var/www/maven/snapshot</url>
+			<id>snapshots</id>
+			<url>dav:http://neptun.berg.local/archiva/repository/snapshots/
+			</url>
 		</snapshotRepository>
+		<repository>
+			<id>releases</id>
+			<url>dav:http://neptun.berg.local/archiva/repository/releases/
+			</url>
+		</repository>
 	</distributionManagement>
 </project>
