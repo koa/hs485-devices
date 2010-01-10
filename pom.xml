@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<name>HS485-Devices</name>
 	<groupId>ch.eleveneye.hs485</groupId>
@@ -37,15 +38,29 @@
 		<dependency>
 			<groupId>ch.eleveneye.hs485</groupId>
 			<artifactId>comm</artifactId>
-			<version>0.5.1</version>
+			<version>0.5.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.rxtx</groupId>
+			<artifactId>rxtx</artifactId>
+			<version>2.1.7r2-3</version>
 		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
 			<id>snapshots</id>
-			<name>Archiva Managed Snapshot Repository</name>
-			<url>http://neptun.berg.local/archiva/repository/snapshots/
-			</url>
+			<name>Artifactory Managed Snapshot Repository</name>
+			<url>http://neptun.berg.local/artifactory/libs-snapshots-local</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -55,9 +70,8 @@
 		</repository>
 		<repository>
 			<id>releases</id>
-			<name>Archiva Releases</name>
-			<url>http://neptun.berg.local/archiva/repository/releases/
-			</url>
+			<name>Artifactory Releases</name>
+			<url>http://neptun.berg.local/artifactory/libs-releases-local</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -67,27 +81,26 @@
 		</repository>
 		<repository>
 			<id>internal</id>
-			<name>Archiva Managed Internal Repository</name>
-			<url>http://neptun.berg.local/archiva/repository/internal/
-			</url>
+			<name>Artifactory Managed Internal Repository</name>
+			<url>http://neptun.berg.local/artifactory/remote-repos</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
 			<snapshots>
-				<enabled>false</enabled>
+				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
 	<distributionManagement>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<url>dav:http://neptun.berg.local/archiva/repository/snapshots/
-			</url>
-		</snapshotRepository>
 		<repository>
-			<id>releases</id>
-			<url>dav:http://neptun.berg.local/archiva/repository/releases/
-			</url>
+			<id>neptun.berg.local</id>
+			<name>neptun.berg.local-releases</name>
+			<url>http://neptun.berg.local/artifactory/libs-releases-local</url>
 		</repository>
+		<snapshotRepository>
+			<id>neptun.berg.local</id>
+			<name>neptun.berg.local-snapshots</name>
+			<url>http://neptun.berg.local/artifactory/libs-snapshots-local</url>
+		</snapshotRepository>
 	</distributionManagement>
 </project>
