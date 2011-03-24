@@ -279,6 +279,10 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		return true;
 	}
 
+	public int getAddress() {
+		return deviceAddr;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
