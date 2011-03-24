@@ -16,6 +16,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import ch.eleveneye.hs485.api.data.HwVer;
+import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.device.ActorType;
 import ch.eleveneye.hs485.device.KeySensor;
 import ch.eleveneye.hs485.device.Registry;
@@ -24,9 +26,9 @@ import ch.eleveneye.hs485.device.SensorType;
 import ch.eleveneye.hs485.device.TimedActor;
 import ch.eleveneye.hs485.device.config.ConfigData;
 import ch.eleveneye.hs485.device.config.InputPairConfig;
+import ch.eleveneye.hs485.device.config.InputPairConfig.InputConfig;
 import ch.eleveneye.hs485.device.config.PairMode;
 import ch.eleveneye.hs485.device.config.TimeMode;
-import ch.eleveneye.hs485.device.config.InputPairConfig.InputConfig;
 import ch.eleveneye.hs485.device.utils.AbstractActor;
 import ch.eleveneye.hs485.device.utils.AbstractDevice;
 import ch.eleveneye.hs485.device.utils.AbstractSensor;
@@ -34,11 +36,9 @@ import ch.eleveneye.hs485.memory.ArrayVariable;
 import ch.eleveneye.hs485.memory.ChoiceEntry;
 import ch.eleveneye.hs485.memory.ChoiceVariable;
 import ch.eleveneye.hs485.memory.ModuleType;
-import ch.eleveneye.hs485.memory.NumberVariable;
 import ch.eleveneye.hs485.memory.ModuleType.ConfigBuilder;
+import ch.eleveneye.hs485.memory.NumberVariable;
 import ch.eleveneye.hs485.protocol.IMessage;
-import ch.eleveneye.hs485.protocol.data.HwVer;
-import ch.eleveneye.hs485.protocol.data.SwVer;
 
 public class IO127 extends AbstractDevice {
 
@@ -85,8 +85,8 @@ public class IO127 extends AbstractDevice {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0x01);
 		}
 
-		public void setTimeMode(TimeMode value) throws IOException {
-			String variableName = "output[" + (actorNr - 12) + "].timer-mode";
+		public void setTimeMode(final TimeMode value) throws IOException {
+			final String variableName = "output[" + (actorNr - 12) + "].timer-mode";
 			switch (value) {
 			case NONE:
 				writeVariable(variableName, 0xff);
@@ -100,13 +100,12 @@ public class IO127 extends AbstractDevice {
 			}
 		}
 
-		public void setTimeValue(int value) throws IOException {
+		public void setTimeValue(final int value) throws IOException {
 			writeVariable("output-time[" + (actorNr - 12) + "].time", value);
 		}
 
-		public void setToggleBit(boolean value) throws IOException {
-			writeVariable("output[" + (actorNr - 12) + "].toggle", value ? 0xff
-					: 0x00);
+		public void setToggleBit(final boolean value) throws IOException {
+			writeVariable("output[" + (actorNr - 12) + "].toggle", value ? 0xff : 0x00);
 		}
 
 		public void toggle() throws IOException {
@@ -115,25 +114,23 @@ public class IO127 extends AbstractDevice {
 
 		@Override
 		public String toString() {
-			return "IO127-Actor " + Integer.toHexString(getModuleAddr()) + ":"
-					+ (actorNr - 11);
+			return "IO127-Actor " + Integer.toHexString(getModuleAddr()) + ":" + (actorNr - 11);
 		}
 	}
 
 	public static class IO127Config implements ConfigData {
 
-		protected InputPairConfig pairConfig[];
+		protected InputPairConfig	pairConfig[];
 
 		@Override
 		public ConfigData clone() throws CloneNotSupportedException {
-			IO127Config ret = new IO127Config();
+			final IO127Config ret = new IO127Config();
 			if (pairConfig == null)
 				ret.pairConfig = null;
 			else {
 				ret.pairConfig = new InputPairConfig[pairConfig.length];
-				for (int i = 0; i < pairConfig.length; i++) {
+				for (int i = 0; i < pairConfig.length; i++)
 					ret.pairConfig[i] = (InputPairConfig) pairConfig[i].clone();
-				}
 			}
 			return ret;
 		}
@@ -143,10 +140,9 @@ public class IO127 extends AbstractDevice {
 		}
 
 		public Map<String, SensorType> connectableSensors() {
-			Map<String, SensorType> ret = new TreeMap<String, SensorType>();
-			for (int i = 0; i < pairConfig.length; i++) {
+			final Map<String, SensorType> ret = new TreeMap<String, SensorType>();
+			for (int i = 0; i < pairConfig.length; i++)
 				pairConfig[i].appendSensors(i * 2 + 1, ret);
-			}
 			return ret;
 		}
 
@@ -158,42 +154,37 @@ public class IO127 extends AbstractDevice {
 			return new TreeMap<String, SensorType>();
 		}
 
-		public void showUI(JPanel panel) {
+		public void showUI(final JPanel panel) {
 			panel.removeAll();
 			panel.setLayout(new GridBagLayout());
 			for (int i = 0; i < pairConfig.length; i++) {
-				JPanel pairPanel = new JPanel();
+				final JPanel pairPanel = new JPanel();
 				pairConfig[i].showUI(pairPanel);
-				pairPanel.setBorder(BorderFactory.createTitledBorder(null,
-						"Paar " + (i + 1), TitledBorder.DEFAULT_JUSTIFICATION,
+				pairPanel.setBorder(BorderFactory.createTitledBorder(null, "Paar " + (i + 1), TitledBorder.DEFAULT_JUSTIFICATION,
 						TitledBorder.DEFAULT_POSITION, null, null));
-				Insets insets = new Insets(2, 2, 2, 2);
-				panel.add(pairPanel, new GridBagConstraints(i % 2, i / 2, 1, 1,
-						0.1, 0.1, GridBagConstraints.WEST,
-						GridBagConstraints.BOTH, insets, 0, 0));
+				final Insets insets = new Insets(2, 2, 2, 2);
+				panel.add(pairPanel, new GridBagConstraints(i % 2, i / 2, 1, 1, 0.1, 0.1, GridBagConstraints.WEST, GridBagConstraints.BOTH, insets, 0, 0));
 
 			}
 		}
 	}
 
 	private static final class IO127ConfigBuilder implements ConfigBuilder {
-		public Collection<Integer> listAvailableModules(Registry bus)
-				throws IOException {
-			TreeSet<Integer> ret = new TreeSet<Integer>();
-			for (PhysicallyDevice device : bus.listPhysicalDevices()) {
+		public Collection<Integer> listAvailableModules(final Registry bus) throws IOException {
+			final TreeSet<Integer> ret = new TreeSet<Integer>();
+			for (final PhysicallyDevice device : bus.listPhysicalDevices())
 				if (device instanceof IO127) {
-					IO127 dev = (IO127) device;
+					final IO127 dev = (IO127) device;
 					ret.add(dev.deviceAddr);
 				}
-			}
 			return ret;
 		}
 
 		public ConfigData makeNewConfigData() {
-			IO127Config ret = new IO127Config();
+			final IO127Config ret = new IO127Config();
 			ret.pairConfig = new InputPairConfig[6];
 			for (int i = 0; i < ret.pairConfig.length; i++) {
-				InputPairConfig currentPairConfig = new InputPairConfig(null);
+				final InputPairConfig currentPairConfig = new InputPairConfig(null);
 				currentPairConfig.setJointInput(true);
 				currentPairConfig.setInputChoices(IO127.CHOICES);
 				currentPairConfig.setInput1Type(0);
@@ -204,8 +195,7 @@ public class IO127 extends AbstractDevice {
 		}
 	}
 
-	private final class IO127Sensor extends AbstractSensor implements
-			PairableSensor, KeySensor {
+	private final class IO127Sensor extends AbstractSensor implements PairableSensor, KeySensor {
 
 		private IO127Sensor(final int sensorNr) {
 			super(sensorNr);
@@ -213,13 +203,10 @@ public class IO127 extends AbstractDevice {
 
 		public void addActor(final Actor target) throws IOException {
 			if (isPaired()) {
-				addInputTargetRaw(sensorNr, target.getModuleAddr(), target
-						.getActorNr());
-				addInputTargetRaw(sensorNr + 1, target.getModuleAddr(), target
-						.getActorNr());
+				addInputTargetRaw(sensorNr, target.getModuleAddr(), target.getActorNr());
+				addInputTargetRaw(sensorNr + 1, target.getModuleAddr(), target.getActorNr());
 			} else
-				addInputTargetRaw(sensorNr, target.getModuleAddr(), target
-						.getActorNr());
+				addInputTargetRaw(sensorNr, target.getModuleAddr(), target.getActorNr());
 		}
 
 		public int getModuleAddr() {
@@ -236,48 +223,38 @@ public class IO127 extends AbstractDevice {
 
 		public void removeActor(final Actor target) throws IOException {
 			if (isPaired()) {
-				removeInputTargetRaw(sensorNr, target.getModuleAddr(), target
-						.getActorNr());
-				removeInputTargetRaw(sensorNr + 1, target.getModuleAddr(),
-						target.getActorNr());
+				removeInputTargetRaw(sensorNr, target.getModuleAddr(), target.getActorNr());
+				removeInputTargetRaw(sensorNr + 1, target.getModuleAddr(), target.getActorNr());
 			} else
-				removeInputTargetRaw(sensorNr, target.getModuleAddr(), target
-						.getActorNr());
+				removeInputTargetRaw(sensorNr, target.getModuleAddr(), target.getActorNr());
 		}
 
 		@Override
 		public String toString() {
 			try {
-				return "IO127-"
-						+ Integer.toHexString(deviceAddr)
-						+ (isPaired() ? ("-" + (sensorNr + 1) + "/" + (sensorNr + 2))
-								: ("-" + (sensorNr + 1)));
-			} catch (IOException e) {
-				return "IO127-" + Integer.toHexString(deviceAddr) + "-"
-						+ (sensorNr + 1);
+				return "IO127-" + Integer.toHexString(deviceAddr) + (isPaired() ? "-" + (sensorNr + 1) + "/" + (sensorNr + 2) : "-" + (sensorNr + 1));
+			} catch (final IOException e) {
+				return "IO127-" + Integer.toHexString(deviceAddr) + "-" + (sensorNr + 1);
 			}
 		}
 	}
 
-	private static final int ACTOR_COUNT = 7;
+	private static final int										ACTOR_COUNT					= 7;
 
-	private static final Map<String, ActorType> actors = new TreeMap<String, ActorType>();
+	private static final Map<String, ActorType>	actors							= new TreeMap<String, ActorType>();
 
-	private static final InputConfig[] CHOICES = new InputConfig[] {
-			new InputConfig("Taster", SensorType.TWO_WIRE, SensorType.ONE_WIRE),
-			new InputConfig("Schalter", SensorType.TWO_WIRE,
-					SensorType.ONE_WIRE) };
+	private static final InputConfig[]					CHOICES							= new InputConfig[] {
+			new InputConfig("Taster", SensorType.TWO_WIRE, SensorType.ONE_WIRE), new InputConfig("Schalter", SensorType.TWO_WIRE, SensorType.ONE_WIRE) };
 
-	private static final int SENSOR_PAIR_COUNT = 6;
+	private static final int										SENSOR_PAIR_COUNT		= 6;
 
-	private static final String SENSOR_TYPE_PUSH = "push";
+	private static final String									SENSOR_TYPE_PUSH		= "push";
 
-	private static final String SENSOR_TYPE_SWITCH = "switch";
+	private static final String									SENSOR_TYPE_SWITCH	= "switch";
 
 	static {
-		for (int i = 0; i < IO127.ACTOR_COUNT; i += 1) {
+		for (int i = 0; i < IO127.ACTOR_COUNT; i += 1)
 			IO127.actors.put(Integer.toString(i + 1), ActorType.HIGH_VOLTAGE);
-		}
 	}
 
 	public static List<ModuleType> getAvailableConfig() {
@@ -318,10 +295,8 @@ public class IO127 extends AbstractDevice {
 		sensorType.setAddress(0x0028);
 		sensorType.setLength(1);
 		sensorType.setName("sensor-type");
-		sensorType.addChoiceEntry(new ChoiceEntry(0xff, IO127.SENSOR_TYPE_PUSH,
-				""));
-		sensorType.addChoiceEntry(new ChoiceEntry(0x01,
-				IO127.SENSOR_TYPE_SWITCH, ""));
+		sensorType.addChoiceEntry(new ChoiceEntry(0xff, IO127.SENSOR_TYPE_PUSH, ""));
+		sensorType.addChoiceEntry(new ChoiceEntry(0x01, IO127.SENSOR_TYPE_SWITCH, ""));
 		inputConfig.addComponent(sensorType);
 		io127v1.addVariable(inputConfig);
 		io127v101.addVariable(inputConfig);
@@ -377,11 +352,11 @@ public class IO127 extends AbstractDevice {
 		return versions;
 	}
 
-	private LinkedList<Actor> actorList;
+	private LinkedList<Actor>							actorList;
 
-	private LinkedList<PhysicallySensor> sensorList;
+	private LinkedList<PhysicallySensor>	sensorList;
 
-	public void consumeBusEvent(IMessage message) {
+	public void consumeBusEvent(final IMessage message) {
 		// TODO Auto-generated method stub
 
 	}
@@ -392,19 +367,14 @@ public class IO127 extends AbstractDevice {
 	}
 
 	public ConfigData getConfig() throws IOException {
-		IO127Config ret = new IO127Config();
+		final IO127Config ret = new IO127Config();
 		ret.pairConfig = new InputPairConfig[6];
 		for (int i = 0; i < ret.pairConfig.length; i++) {
-			InputPairConfig currentPairConfig = new InputPairConfig(null);
-			currentPairConfig
-					.setJointInput(getInputPairMode(i) == PairMode.JOINT);
+			final InputPairConfig currentPairConfig = new InputPairConfig(null);
+			currentPairConfig.setJointInput(getInputPairMode(i) == PairMode.JOINT);
 			currentPairConfig.setInputChoices(IO127.CHOICES);
-			currentPairConfig.setInput1Type(readVariableResolved(
-					"input[" + (i * 2) + "].sensor-type").equals(
-					IO127.SENSOR_TYPE_SWITCH) ? 1 : 0);
-			currentPairConfig.setInput2Type(readVariableResolved(
-					"input[" + (i * 2 + 1) + "].sensor-type").equals(
-					IO127.SENSOR_TYPE_SWITCH) ? 1 : 0);
+			currentPairConfig.setInput1Type(readVariableResolved("input[" + i * 2 + "].sensor-type").equals(IO127.SENSOR_TYPE_SWITCH) ? 1 : 0);
+			currentPairConfig.setInput2Type(readVariableResolved("input[" + (i * 2 + 1) + "].sensor-type").equals(IO127.SENSOR_TYPE_SWITCH) ? 1 : 0);
 			ret.pairConfig[i] = currentPairConfig;
 		}
 		return ret;
@@ -414,7 +384,7 @@ public class IO127 extends AbstractDevice {
 		return 6;
 	}
 
-	public PairMode getInputPairMode(int pairNr) throws IOException {
+	public PairMode getInputPairMode(final int pairNr) throws IOException {
 		return readInputType(pairNr) != 0xff ? PairMode.JOINT : PairMode.SPLIT;
 	}
 
@@ -462,28 +432,19 @@ public class IO127 extends AbstractDevice {
 		return readVariable("input[" + i * 2 + "].type");
 	}
 
-	public void setConfig(ConfigData newConfig) throws IOException {
-		IO127Config config = (IO127Config) newConfig;
+	public void setConfig(final ConfigData newConfig) throws IOException {
+		final IO127Config config = (IO127Config) newConfig;
 		for (int i = 0; i < config.pairConfig.length; i++) {
-			InputPairConfig currentPairConfig = config.pairConfig[i];
-			setInputPairMode(i,
-					currentPairConfig.isJointInput() ? PairMode.JOINT
-							: PairMode.SPLIT);
-			int input1Config = currentPairConfig.getInput1Type();
-			writeChoice("input[" + (i * 2) + "].sensor-type",
-					input1Config == 0 ? IO127.SENSOR_TYPE_PUSH
-							: IO127.SENSOR_TYPE_SWITCH);
-			int input2Config = currentPairConfig.isJointInput() ? currentPairConfig
-					.getInput1Type()
-					: currentPairConfig.getInput2Type();
-			writeChoice("input[" + (i * 2 + 1) + "].sensor-type",
-					input2Config == 0 ? IO127.SENSOR_TYPE_PUSH
-							: IO127.SENSOR_TYPE_SWITCH);
+			final InputPairConfig currentPairConfig = config.pairConfig[i];
+			setInputPairMode(i, currentPairConfig.isJointInput() ? PairMode.JOINT : PairMode.SPLIT);
+			final int input1Config = currentPairConfig.getInput1Type();
+			writeChoice("input[" + i * 2 + "].sensor-type", input1Config == 0 ? IO127.SENSOR_TYPE_PUSH : IO127.SENSOR_TYPE_SWITCH);
+			final int input2Config = currentPairConfig.isJointInput() ? currentPairConfig.getInput1Type() : currentPairConfig.getInput2Type();
+			writeChoice("input[" + (i * 2 + 1) + "].sensor-type", input2Config == 0 ? IO127.SENSOR_TYPE_PUSH : IO127.SENSOR_TYPE_SWITCH);
 		}
 	}
 
-	public synchronized void setInputPairMode(final int pairNr,
-			final PairMode mode) throws IOException {
+	public synchronized void setInputPairMode(final int pairNr, final PairMode mode) throws IOException {
 		switch (mode) {
 		case JOINT:
 			writeVariable("input[" + pairNr * 2 + "].type", 0x02);

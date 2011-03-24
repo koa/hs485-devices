@@ -8,7 +8,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class ConfigUtil {
-	private static XStream xstream = new XStream(new DomDriver());
+	private static XStream	xstream	= new XStream(new DomDriver());
 
 	@SuppressWarnings("unchecked")
 	public static List<ModuleType> readConfig(final InputStream in) {
@@ -17,8 +17,7 @@ public class ConfigUtil {
 		}
 	}
 
-	public static void writeConfig(final OutputStream out,
-			final List<ModuleType> modules) {
+	public static void writeConfig(final OutputStream out, final List<ModuleType> modules) {
 		synchronized (ConfigUtil.xstream) {
 			ConfigUtil.xstream.toXML(modules, out);
 		}

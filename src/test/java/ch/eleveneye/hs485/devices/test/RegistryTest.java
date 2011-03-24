@@ -10,22 +10,21 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.eleveneye.hs485.api.HS485;
 import ch.eleveneye.hs485.device.Dimmer;
 import ch.eleveneye.hs485.device.Registry;
 import ch.eleveneye.hs485.device.SwitchingActor;
 import ch.eleveneye.hs485.device.config.PairMode;
 import ch.eleveneye.hs485.device.physically.Actor;
 import ch.eleveneye.hs485.device.physically.PhysicallyDevice;
-import ch.eleveneye.hs485.protocol.HS485;
 
 public class RegistryTest {
 
-	private static HS485 bus;
+	private static HS485	bus;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		URL resourceURL = RegistryTest.class
-				.getResource("/ch/eleveneye/hs485/config/logging.properties");
+		final URL resourceURL = RegistryTest.class.getResource("/ch/eleveneye/hs485/config/logging.properties");
 		PropertyConfigurator.configure(resourceURL);
 		Logger.getRootLogger().setLevel(Level.INFO);
 		// bus = new HS485("/dev/ttyUSB0", 3);
@@ -35,46 +34,34 @@ public class RegistryTest {
 	public void testRegistry() throws IOException, InterruptedException {
 		if (true)
 			return;
-		Registry registry = new Registry(bus);
+		final Registry registry = new Registry(bus);
 
 		// registry.getDevice(0xf77).setInputPairMode(1, PairMode.JOINT);
 		// registry.getSensor(0xf77, 2).addActor(registry.getActor(0x23d, 0));
 		// registry.getDevice(0xf77).commit();
 
-		Collection<PhysicallyDevice> physicallyDevices = registry
-				.listPhysicalDevices();
-		for (PhysicallyDevice physicallyDevice : physicallyDevices) {
+		final Collection<PhysicallyDevice> physicallyDevices = registry.listPhysicalDevices();
+		for (final PhysicallyDevice physicallyDevice : physicallyDevices) {
 			// Device device = registry.getDevice(0xf77);
-			for (int i = 0; i < physicallyDevice.getInputPairCount(); i++) {
+			for (int i = 0; i < physicallyDevice.getInputPairCount(); i++)
 				physicallyDevice.setInputPairMode(i, PairMode.JOINT);
-			}
 			physicallyDevice.commit();
 			// System.out.println(device);
 			// device.dumpVariables();
 
 			/*
-			 * Collection<Sensor> sensors = device.listSensors(); for (Sensor
-			 * sensor : sensors) { System.out.println(" -" + sensor); for (Actor
-			 * act : sensor.listAssignedActors()) System.out.println(" -" +
-			 * act); } System.out.println("---");
+			 * Collection<Sensor> sensors = device.listSensors(); for (Sensor sensor :
+			 * sensors) { System.out.println(" -" + sensor); for (Actor act :
+			 * sensor.listAssignedActors()) System.out.println(" -" + act); }
+			 * System.out.println("---");
 			 */
-			Collection<Actor> physicallyActors = physicallyDevice.listActors();
-			for (Actor physicallyActor : physicallyActors) {
+			final Collection<Actor> physicallyActors = physicallyDevice.listActors();
+			for (final Actor physicallyActor : physicallyActors)
 				if (physicallyActor instanceof Dimmer) {
-					Dimmer dimmer = (Dimmer) physicallyActor;
-					System.out.println(" -" + physicallyActor + ", "
-							+ Integer.toHexString(dimmer.getDimmValue()));
-				} else {
-					if (physicallyActor instanceof SwitchingActor) {
-						System.out
-								.println(" -"
-										+ physicallyActor
-										+ ", "
-										+ (((SwitchingActor) physicallyActor)
-												.isOn() ? "On" : "Off"));
-					}
-				}
-			}
+					final Dimmer dimmer = (Dimmer) physicallyActor;
+					System.out.println(" -" + physicallyActor + ", " + Integer.toHexString(dimmer.getDimmValue()));
+				} else if (physicallyActor instanceof SwitchingActor)
+					System.out.println(" -" + physicallyActor + ", " + (((SwitchingActor) physicallyActor).isOn() ? "On" : "Off"));
 
 		}
 		/*

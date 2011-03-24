@@ -1,45 +1,19 @@
 package ch.eleveneye.hs485.device.virtual;
 
-import ch.eleveneye.hs485.protocol.data.TFSValue;
+import ch.eleveneye.hs485.api.data.TFSValue;
 
 public class TFSData implements EventData {
-	TFSValue value;
+	long			eventTime;
 
-	long eventTime;
+	TFSValue	value;
 
-	public TFSData(TFSValue value) {
+	public TFSData(final TFSValue value) {
 		this.value = value;
-		this.eventTime = System.currentTimeMillis();
-	}
-
-	public int getHumidity() {
-		return value.getHumidity();
-	}
-
-	public double getTemperatur() {
-		return value.getTemperatur();
+		eventTime = System.currentTimeMillis();
 	}
 
 	@Override
-	public String toString() {
-		return value.toString();
-	}
-
-	public long getEventTime() {
-		return eventTime;
-	}
-
-	@Override
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + (int) (eventTime ^ (eventTime >>> 32));
-		result = PRIME * result + ((value == null) ? 0 : value.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -55,5 +29,31 @@ public class TFSData implements EventData {
 		} else if (!value.equals(other.value))
 			return false;
 		return true;
+	}
+
+	public long getEventTime() {
+		return eventTime;
+	}
+
+	public int getHumidity() {
+		return value.getHumidity();
+	}
+
+	public double getTemperatur() {
+		return value.getTemperatur();
+	}
+
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + (int) (eventTime ^ eventTime >>> 32);
+		result = PRIME * result + (value == null ? 0 : value.hashCode());
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return value.toString();
 	}
 }

@@ -6,34 +6,33 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import ch.eleveneye.hs485.api.data.HwVer;
+import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.device.Device;
 import ch.eleveneye.hs485.device.Registry;
 import ch.eleveneye.hs485.device.config.ConfigData;
-import ch.eleveneye.hs485.protocol.data.HwVer;
-import ch.eleveneye.hs485.protocol.data.SwVer;
 
 public class ModuleType {
 	public static interface ConfigBuilder {
-		public Collection<Integer> listAvailableModules(Registry bus)
-				throws IOException;
+		public Collection<Integer> listAvailableModules(Registry bus) throws IOException;
 
 		public ConfigData makeNewConfigData();
 	}
 
-	private ConfigBuilder configBuilder;
+	private ConfigBuilder	configBuilder;
 
-	private int eepromSize;
+	private int						eepromSize;
 
-	private HwVer hwVer;
+	private HwVer					hwVer;
 
-	private Class<Device> implementingClass;
+	private Class<Device>	implementingClass;
 
-	private String name;
-	private SwVer swVer;
+	private String				name;
+	private SwVer					swVer;
 
-	List<Variable> variables;
+	List<Variable>				variables;
 
-	private int width;
+	private int						width;
 
 	public ModuleType() {
 		variables = new ArrayList<Variable>();
@@ -97,9 +96,9 @@ public class ModuleType {
 
 	/**
 	 * @param configBuilder
-	 *            the configBuilder to set
+	 *          the configBuilder to set
 	 */
-	public void setConfigBuilder(ConfigBuilder configBuilder) {
+	public void setConfigBuilder(final ConfigBuilder configBuilder) {
 		this.configBuilder = configBuilder;
 	}
 
@@ -125,9 +124,9 @@ public class ModuleType {
 
 	/**
 	 * @param width
-	 *            the width to set
+	 *          the width to set
 	 */
-	public void setWidth(int width) {
+	public void setWidth(final int width) {
 		this.width = width;
 	}
 }
