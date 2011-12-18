@@ -13,6 +13,8 @@ public interface PhysicallyDevice extends Device {
 
 	public Actor getActor(int actorNr) throws IOException;
 
+	public int getActorCount();
+
 	public int getAddress();
 
 	public int getInputPairCount();

@@ -341,6 +341,11 @@ public class HS485D extends AbstractDevice {
 		return actorList.get(actorNr);
 	}
 
+	@Override
+	public int getActorCount() {
+		return 1;
+	}
+
 	public ConfigData getConfig() throws IOException {
 		final InputPairConfig config = new InputPairConfig(HS485D.actors);
 
@@ -368,10 +373,6 @@ public class HS485D extends AbstractDevice {
 		return null;
 	}
 
-	private boolean isSensorPaired() throws IOException {
-		return readVariable(HS485D.VAR_INPUT_TYPE) == 0x01;
-	}
-
 	public synchronized Collection<Actor> listActors() throws IOException {
 		loadActorList();
 		return new ArrayList<Actor>(actorList);
@@ -380,19 +381,6 @@ public class HS485D extends AbstractDevice {
 	public synchronized Collection<Sensor> listSensors() throws IOException {
 		loadSensorList();
 		return new ArrayList<Sensor>(sensorList);
-	}
-
-	private void loadActorList() {
-		if (actorList == null)
-			actorList = Arrays.asList(new HS485DActor[] { new HS485DActor(0) });
-	}
-
-	private void loadSensorList() throws IOException {
-		if (sensorList == null)
-			if (isSensorPaired())
-				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0) });
-			else
-				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0), new HS485SSensor(1) });
 	}
 
 	public void setConfig(final ConfigData newConfig) throws IOException {
@@ -411,6 +399,23 @@ public class HS485D extends AbstractDevice {
 	@Override
 	public String toString() {
 		return "D-" + Integer.toHexString(deviceAddr);
+	}
+
+	private boolean isSensorPaired() throws IOException {
+		return readVariable(HS485D.VAR_INPUT_TYPE) == 0x01;
+	}
+
+	private void loadActorList() {
+		if (actorList == null)
+			actorList = Arrays.asList(new HS485DActor[] { new HS485DActor(0) });
+	}
+
+	private void loadSensorList() throws IOException {
+		if (sensorList == null)
+			if (isSensorPaired())
+				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0) });
+			else
+				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0), new HS485SSensor(1) });
 	}
 
 }

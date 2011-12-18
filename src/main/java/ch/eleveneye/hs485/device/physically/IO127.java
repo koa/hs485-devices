@@ -42,6 +42,57 @@ import ch.eleveneye.hs485.protocol.IMessage;
 
 public class IO127 extends AbstractDevice {
 
+	public static class IO127Config implements ConfigData {
+
+		protected InputPairConfig	pairConfig[];
+
+		@Override
+		public ConfigData clone() throws CloneNotSupportedException {
+			final IO127Config ret = new IO127Config();
+			if (pairConfig == null)
+				ret.pairConfig = null;
+			else {
+				ret.pairConfig = new InputPairConfig[pairConfig.length];
+				for (int i = 0; i < pairConfig.length; i++)
+					ret.pairConfig[i] = (InputPairConfig) pairConfig[i].clone();
+			}
+			return ret;
+		}
+
+		public Map<String, ActorType> connectableActors() {
+			return IO127.actors;
+		}
+
+		public Map<String, SensorType> connectableSensors() {
+			final Map<String, SensorType> ret = new TreeMap<String, SensorType>();
+			for (int i = 0; i < pairConfig.length; i++)
+				pairConfig[i].appendSensors(i * 2 + 1, ret);
+			return ret;
+		}
+
+		public Map<String, ActorType> fixedActors() {
+			return new TreeMap<String, ActorType>();
+		}
+
+		public Map<String, SensorType> fixedSensors() {
+			return new TreeMap<String, SensorType>();
+		}
+
+		public void showUI(final JPanel panel) {
+			panel.removeAll();
+			panel.setLayout(new GridBagLayout());
+			for (int i = 0; i < pairConfig.length; i++) {
+				final JPanel pairPanel = new JPanel();
+				pairConfig[i].showUI(pairPanel);
+				pairPanel.setBorder(BorderFactory.createTitledBorder(null, "Paar " + (i + 1), TitledBorder.DEFAULT_JUSTIFICATION,
+						TitledBorder.DEFAULT_POSITION, null, null));
+				final Insets insets = new Insets(2, 2, 2, 2);
+				panel.add(pairPanel, new GridBagConstraints(i % 2, i / 2, 1, 1, 0.1, 0.1, GridBagConstraints.WEST, GridBagConstraints.BOTH, insets, 0, 0));
+
+			}
+		}
+	}
+
 	private final class IO127Actor extends AbstractActor implements TimedActor {
 		private IO127Actor(final int actorNr) {
 			super(actorNr);
@@ -115,57 +166,6 @@ public class IO127 extends AbstractDevice {
 		@Override
 		public String toString() {
 			return "IO127-Actor " + Integer.toHexString(getModuleAddr()) + ":" + (actorNr - 11);
-		}
-	}
-
-	public static class IO127Config implements ConfigData {
-
-		protected InputPairConfig	pairConfig[];
-
-		@Override
-		public ConfigData clone() throws CloneNotSupportedException {
-			final IO127Config ret = new IO127Config();
-			if (pairConfig == null)
-				ret.pairConfig = null;
-			else {
-				ret.pairConfig = new InputPairConfig[pairConfig.length];
-				for (int i = 0; i < pairConfig.length; i++)
-					ret.pairConfig[i] = (InputPairConfig) pairConfig[i].clone();
-			}
-			return ret;
-		}
-
-		public Map<String, ActorType> connectableActors() {
-			return IO127.actors;
-		}
-
-		public Map<String, SensorType> connectableSensors() {
-			final Map<String, SensorType> ret = new TreeMap<String, SensorType>();
-			for (int i = 0; i < pairConfig.length; i++)
-				pairConfig[i].appendSensors(i * 2 + 1, ret);
-			return ret;
-		}
-
-		public Map<String, ActorType> fixedActors() {
-			return new TreeMap<String, ActorType>();
-		}
-
-		public Map<String, SensorType> fixedSensors() {
-			return new TreeMap<String, SensorType>();
-		}
-
-		public void showUI(final JPanel panel) {
-			panel.removeAll();
-			panel.setLayout(new GridBagLayout());
-			for (int i = 0; i < pairConfig.length; i++) {
-				final JPanel pairPanel = new JPanel();
-				pairConfig[i].showUI(pairPanel);
-				pairPanel.setBorder(BorderFactory.createTitledBorder(null, "Paar " + (i + 1), TitledBorder.DEFAULT_JUSTIFICATION,
-						TitledBorder.DEFAULT_POSITION, null, null));
-				final Insets insets = new Insets(2, 2, 2, 2);
-				panel.add(pairPanel, new GridBagConstraints(i % 2, i / 2, 1, 1, 0.1, 0.1, GridBagConstraints.WEST, GridBagConstraints.BOTH, insets, 0, 0));
-
-			}
 		}
 	}
 
@@ -366,6 +366,11 @@ public class IO127 extends AbstractDevice {
 		return actorList.get(actorNr - 12);
 	}
 
+	@Override
+	public int getActorCount() {
+		return ACTOR_COUNT;
+	}
+
 	public ConfigData getConfig() throws IOException {
 		final IO127Config ret = new IO127Config();
 		ret.pairConfig = new InputPairConfig[6];
@@ -406,32 +411,6 @@ public class IO127 extends AbstractDevice {
 		return new ArrayList<Sensor>(sensorList);
 	}
 
-	private synchronized void loadActors() {
-		if (actorList == null) {
-			actorList = new LinkedList<Actor>();
-			for (int i = 12; i < 19; i++)
-				actorList.add(new IO127Actor(i));
-		}
-	}
-
-	private void loadSensorList() throws IOException {
-		if (sensorList == null) {
-			sensorList = new LinkedList<PhysicallySensor>();
-			for (int i = 0; i < IO127.SENSOR_PAIR_COUNT; i += 1) {
-				final int sensorConfig = readInputType(i);
-				if (sensorConfig == 0xff) { // toggle-input
-					sensorList.add(new IO127Sensor(i * 2));
-					sensorList.add(new IO127Sensor(i * 2 + 1));
-				} else
-					sensorList.add(new IO127Sensor(i * 2));
-			}
-		}
-	}
-
-	private int readInputType(final int i) throws IOException {
-		return readVariable("input[" + i * 2 + "].type");
-	}
-
 	public void setConfig(final ConfigData newConfig) throws IOException {
 		final IO127Config config = (IO127Config) newConfig;
 		for (int i = 0; i < config.pairConfig.length; i++) {
@@ -461,5 +440,31 @@ public class IO127 extends AbstractDevice {
 	@Override
 	public String toString() {
 		return "IO127-" + super.toString();
+	}
+
+	private synchronized void loadActors() {
+		if (actorList == null) {
+			actorList = new LinkedList<Actor>();
+			for (int i = 12; i < 19; i++)
+				actorList.add(new IO127Actor(i));
+		}
+	}
+
+	private void loadSensorList() throws IOException {
+		if (sensorList == null) {
+			sensorList = new LinkedList<PhysicallySensor>();
+			for (int i = 0; i < IO127.SENSOR_PAIR_COUNT; i += 1) {
+				final int sensorConfig = readInputType(i);
+				if (sensorConfig == 0xff) { // toggle-input
+					sensorList.add(new IO127Sensor(i * 2));
+					sensorList.add(new IO127Sensor(i * 2 + 1));
+				} else
+					sensorList.add(new IO127Sensor(i * 2));
+			}
+		}
+	}
+
+	private int readInputType(final int i) throws IOException {
+		return readVariable("input[" + i * 2 + "].type");
 	}
 }

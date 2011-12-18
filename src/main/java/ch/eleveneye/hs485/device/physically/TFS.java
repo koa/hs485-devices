@@ -29,6 +29,32 @@ import ch.eleveneye.hs485.memory.ModuleType.ConfigBuilder;
 
 public class TFS extends AbstractDevice {
 
+	protected class TFSensorImpl implements TFSensor, PhysicallySensor {
+
+		LinkedList<Actor>	registeredActors;
+
+		public TFSensorImpl() {
+			registeredActors = new LinkedList<Actor>();
+		}
+
+		public int getModuleAddr() {
+			return deviceAddr;
+		}
+
+		public int getSensorNr() {
+			return 0;
+		}
+
+		public Collection<Actor> listAssignedActors() throws IOException {
+			return registeredActors;
+		}
+
+		public TFSValue readTF() throws IOException {
+			return bus.readTemp(deviceAddr);
+		}
+
+	}
+
 	private final static class TFSConfigData implements ConfigData {
 		private static final TreeMap<String, SensorType>	SENSORS	= new TreeMap<String, SensorType>();
 		static {
@@ -68,32 +94,6 @@ public class TFS extends AbstractDevice {
 		}
 	}
 
-	protected class TFSensorImpl implements TFSensor, PhysicallySensor {
-
-		LinkedList<Actor>	registeredActors;
-
-		public TFSensorImpl() {
-			registeredActors = new LinkedList<Actor>();
-		}
-
-		public int getModuleAddr() {
-			return deviceAddr;
-		}
-
-		public int getSensorNr() {
-			return 0;
-		}
-
-		public Collection<Actor> listAssignedActors() throws IOException {
-			return registeredActors;
-		}
-
-		public TFSValue readTF() throws IOException {
-			return bus.readTemp(deviceAddr);
-		}
-
-	}
-
 	public static Collection<ModuleType> getAvailableConfig() {
 		final ModuleType tfsv13 = new ModuleType();
 		tfsv13.setEepromSize(512);
@@ -128,6 +128,11 @@ public class TFS extends AbstractDevice {
 
 	public Actor getActor(final int actorNr) throws IOException {
 		return null;
+	}
+
+	@Override
+	public int getActorCount() {
+		return 0;
 	}
 
 	public ConfigData getConfig() throws IOException {

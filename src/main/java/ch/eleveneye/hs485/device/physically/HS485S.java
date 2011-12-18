@@ -310,6 +310,11 @@ public class HS485S extends AbstractDevice {
 		return actorList.get(actorNr);
 	}
 
+	@Override
+	public int getActorCount() {
+		return 2;
+	}
+
 	public ConfigData getConfig() throws IOException {
 		final InputPairConfig config = new InputPairConfig(HS485S.actors);
 		config.setInputChoices(HS485S.choices);
@@ -335,10 +340,6 @@ public class HS485S extends AbstractDevice {
 		return null;
 	}
 
-	private boolean isInputPaired() throws IOException {
-		return readVariable("input-type") == 0x01;
-	}
-
 	public synchronized Collection<Actor> listActors() throws IOException {
 		loadActorList();
 		return new ArrayList<Actor>(actorList);
@@ -347,19 +348,6 @@ public class HS485S extends AbstractDevice {
 	public synchronized Collection<Sensor> listSensors() throws IOException {
 		loadSensorList();
 		return new ArrayList<Sensor>(sensorList);
-	}
-
-	private void loadActorList() {
-		if (actorList == null)
-			actorList = Arrays.asList(new Actor[] { new HS485SActor(0), new HS485SActor(1) });
-	}
-
-	private void loadSensorList() throws IOException {
-		if (sensorList == null)
-			if (isInputPaired())
-				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0) });
-			else
-				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0), new HS485SSensor(1) });
 	}
 
 	public void setConfig(final ConfigData newConfig) throws IOException {
@@ -378,6 +366,23 @@ public class HS485S extends AbstractDevice {
 	@Override
 	public String toString() {
 		return "S-" + Integer.toHexString(deviceAddr);
+	}
+
+	private boolean isInputPaired() throws IOException {
+		return readVariable("input-type") == 0x01;
+	}
+
+	private void loadActorList() {
+		if (actorList == null)
+			actorList = Arrays.asList(new Actor[] { new HS485SActor(0), new HS485SActor(1) });
+	}
+
+	private void loadSensorList() throws IOException {
+		if (sensorList == null)
+			if (isInputPaired())
+				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0) });
+			else
+				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0), new HS485SSensor(1) });
 	}
 
 }
