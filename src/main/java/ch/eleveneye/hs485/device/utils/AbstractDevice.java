@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.eleveneye.hs485.api.HS485;
 import ch.eleveneye.hs485.device.Registry;
@@ -100,9 +101,9 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		}
 	}
 
-	private static Logger	log						= Logger.getLogger(AbstractDevice.class);
-
 	final static int			MIN_GAP_SIZE	= 3;
+
+	private static Logger	log						= LoggerFactory.getLogger(AbstractDevice.class);
 
 	protected static ArrayVariable defaultTargetConfig() {
 		final ArrayVariable targetConfig = new ArrayVariable();
@@ -142,36 +143,6 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 	protected Registry		registry;
 
 	protected boolean			reloadOnCommit;
-
-	protected void addInputTargetRaw(final int inputNr, final int targetAddress, final int targetNr) throws IOException {
-		int firstFree = -1;
-		final int configCount = ((ArrayVariable) currentConfig.getVariableByName("target")).getCount();
-		for (int i = 0; i < configCount; i += 1) {
-			final int currentInput = readVariable("target[" + i + "].input-nr");
-			final int currentTargetAddr = readVariable("target[" + i + "].target-addr");
-			final int currentTargetNr = readVariable("target[" + i + "].target-nr");
-			if (currentInput == 0xff || currentTargetAddr == -1 || currentTargetNr == 0xff) {
-				if (firstFree < 0)
-					firstFree = i;
-			} else if (currentInput == inputNr && currentTargetAddr == targetAddress && currentTargetNr == targetNr)
-				// Ziel ist schon programmiert
-				return;
-		}
-		if (firstFree == -1)
-			throw new IllegalArgumentException("Auf dem Modul " + this + " sind schon alle Konfigurations-Register belegt");
-		writeVariable("target[" + firstFree + "].input-nr", inputNr);
-		writeVariable("target[" + firstFree + "].target-addr", targetAddress);
-		writeVariable("target[" + firstFree + "].target-nr", targetNr);
-	}
-
-	private synchronized void checkMemory() throws IOException {
-		if (oldMemory == null) {
-			oldMemory = bus.readModuleEEPROM(deviceAddr, currentConfig.getEepromSize());
-			currentMemory = new byte[oldMemory.length];
-			System.arraycopy(oldMemory, 0, currentMemory, 0, oldMemory.length);
-			reloadOnCommit = false;
-		}
-	}
 
 	public void clearAllInputTargets() throws IOException {
 		final int configCount = ((ArrayVariable) currentConfig.getVariableByName("target")).getCount();
@@ -225,28 +196,6 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 			oldMemory = null;
 			currentMemory = null;
 			throw e;
-		}
-	}
-
-	protected void dumpVariable(final Collection<Variable> var, final String baseName, final int depth) throws IOException {
-		for (final Variable variable : var) {
-			final String currentName = baseName + variable.getName();
-			if (variable instanceof NumberVariable)
-				System.out.println(" " + currentName + "=" + readVariable(currentName));
-			else if (variable instanceof ChoiceVariable) {
-				final ChoiceVariable choice = (ChoiceVariable) variable;
-				final int value = readVariable(currentName);
-				String valueStr = Integer.toHexString(value);
-				final ChoiceEntry entry = choice.getEntryByValue(value);
-				if (entry != null)
-					valueStr = '"' + entry.getName() + '"';
-				System.out.println(" " + currentName + "=" + valueStr);
-
-			} else if (variable instanceof ArrayVariable) {
-				final ArrayVariable array = (ArrayVariable) variable;
-				for (int i = 0; i < array.getCount(); i++)
-					dumpVariable(array.listComponents(), currentName + "[" + i + "].", depth + 1);
-			}
 		}
 	}
 
@@ -306,6 +255,55 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		currentMemory = null;
 	}
 
+	@Override
+	public String toString() {
+		return "Device: " + Integer.toHexString(deviceAddr);
+
+	}
+
+	protected void addInputTargetRaw(final int inputNr, final int targetAddress, final int targetNr) throws IOException {
+		int firstFree = -1;
+		final int configCount = ((ArrayVariable) currentConfig.getVariableByName("target")).getCount();
+		for (int i = 0; i < configCount; i += 1) {
+			final int currentInput = readVariable("target[" + i + "].input-nr");
+			final int currentTargetAddr = readVariable("target[" + i + "].target-addr");
+			final int currentTargetNr = readVariable("target[" + i + "].target-nr");
+			if (currentInput == 0xff || currentTargetAddr == -1 || currentTargetNr == 0xff) {
+				if (firstFree < 0)
+					firstFree = i;
+			} else if (currentInput == inputNr && currentTargetAddr == targetAddress && currentTargetNr == targetNr)
+				// Ziel ist schon programmiert
+				return;
+		}
+		if (firstFree == -1)
+			throw new IllegalArgumentException("Auf dem Modul " + this + " sind schon alle Konfigurations-Register belegt");
+		writeVariable("target[" + firstFree + "].input-nr", inputNr);
+		writeVariable("target[" + firstFree + "].target-addr", targetAddress);
+		writeVariable("target[" + firstFree + "].target-nr", targetNr);
+	}
+
+	protected void dumpVariable(final Collection<Variable> var, final String baseName, final int depth) throws IOException {
+		for (final Variable variable : var) {
+			final String currentName = baseName + variable.getName();
+			if (variable instanceof NumberVariable)
+				log.info(" " + currentName + "=" + readVariable(currentName));
+			else if (variable instanceof ChoiceVariable) {
+				final ChoiceVariable choice = (ChoiceVariable) variable;
+				final int value = readVariable(currentName);
+				String valueStr = Integer.toHexString(value);
+				final ChoiceEntry entry = choice.getEntryByValue(value);
+				if (entry != null)
+					valueStr = '"' + entry.getName() + '"';
+				log.info(" " + currentName + "=" + valueStr);
+
+			} else if (variable instanceof ArrayVariable) {
+				final ArrayVariable array = (ArrayVariable) variable;
+				for (int i = 0; i < array.getCount(); i++)
+					dumpVariable(array.listComponents(), currentName + "[" + i + "].", depth + 1);
+			}
+		}
+	}
+
 	protected Collection<Actor> listAssignedActorsRaw(final int sensor) throws IOException {
 		final Collection<Actor> ret = new LinkedList<Actor>();
 		final int configCount = ((ArrayVariable) currentConfig.getVariableByName("target")).getCount();
@@ -325,16 +323,6 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 	protected int readVariable(final String name) throws IOException {
 		final MemDescription resolved = resolveName(name);
 		return readVariableRaw(resolved);
-	}
-
-	private synchronized int readVariableRaw(final MemDescription resolved) throws IOException {
-		checkMemory();
-		final int address = resolved.getMemAddr();
-		final int length = resolved.getLength();
-		int ret = 0;
-		for (int i = 0; i < length; i += 1)
-			ret = ret << 8 | currentMemory[address + i] & 0xff;
-		return ret;
 	}
 
 	protected String readVariableResolved(final String name) throws IOException {
@@ -414,12 +402,6 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		return null;
 	}
 
-	@Override
-	public String toString() {
-		return "Device: " + Integer.toHexString(deviceAddr);
-
-	}
-
 	protected void writeChoice(final String name, final String value) throws IOException {
 		final MemDescription resolved = resolveName(name);
 		final ChoiceVariable variable = (ChoiceVariable) resolved.getElementDescr();
@@ -428,6 +410,25 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 
 	protected void writeVariable(final String name, final int value) throws IOException {
 		writeVariableRaw(value, resolveName(name));
+	}
+
+	private synchronized void checkMemory() throws IOException {
+		if (oldMemory == null) {
+			oldMemory = bus.readModuleEEPROM(deviceAddr, currentConfig.getEepromSize());
+			currentMemory = new byte[oldMemory.length];
+			System.arraycopy(oldMemory, 0, currentMemory, 0, oldMemory.length);
+			reloadOnCommit = false;
+		}
+	}
+
+	private synchronized int readVariableRaw(final MemDescription resolved) throws IOException {
+		checkMemory();
+		final int address = resolved.getMemAddr();
+		final int length = resolved.getLength();
+		int ret = 0;
+		for (int i = 0; i < length; i += 1)
+			ret = ret << 8 | currentMemory[address + i] & 0xff;
+		return ret;
 	}
 
 	private synchronized void writeVariableRaw(final int value, final MemDescription resolved) throws IOException {

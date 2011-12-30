@@ -13,7 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.eleveneye.hs485.api.HS485;
 import ch.eleveneye.hs485.api.HS485Factory;
@@ -109,20 +110,13 @@ public class Registry {
 	}
 
 	protected static List<ModuleType>	configRegistry	= new LinkedList<ModuleType>();
-	protected static Logger						log							= Logger.getLogger(Registry.class);
+	private static Logger							log							= LoggerFactory.getLogger(Registry.class);
 
 	static {
 		Registry.configRegistry.addAll(HS485D.getAvailableConfig());
 		Registry.configRegistry.addAll(HS485S.getAvailableConfig());
 		Registry.configRegistry.addAll(IO127.getAvailableConfig());
 		Registry.configRegistry.addAll(TFS.getAvailableConfig());
-	}
-
-	protected static ModuleType findModule(final HwVer hwVer, final SwVer swVer) {
-		for (final ModuleType mod : Registry.configRegistry)
-			if (mod.getHwVer().equals(hwVer) && mod.getSwVer().equals(swVer))
-				return mod;
-		return null;
 	}
 
 	public static Collection<ModuleType> listAvailableModules() {
@@ -160,6 +154,13 @@ public class Registry {
 		return ret;
 	}
 
+	protected static ModuleType findModule(final HwVer hwVer, final SwVer swVer) {
+		for (final ModuleType mod : Registry.configRegistry)
+			if (mod.getHwVer().equals(hwVer) && mod.getSwVer().equals(swVer))
+				return mod;
+		return null;
+	}
+
 	private static void takeKeyEvent(final SwitchingActor keyActor, final KeyData keyData) throws IOException {
 		if (keyData.getEvent() == KeyData.Event.PRESS)
 			switch (keyData.getKey()) {
@@ -189,9 +190,9 @@ public class Registry {
 		}
 	}
 
-	HS485																			bus;
-
 	protected Map<Integer, PhysicallyDevice>	foundDevices	= null;
+
+	HS485																			bus;
 
 	public Registry() throws UnsupportedCommOperationException, IOException {
 		bus = HS485Factory.getInstance().getHS485();
@@ -343,6 +344,31 @@ public class Registry {
 		return getPhysicallyDevice(address) == null ? null : foundDevices.get(address).getSensor(sensorNr);
 	}
 
+	public synchronized Collection<PhysicallyDevice> listPhysicalDevices() throws IOException {
+		loadPhysicallyDevices();
+		return foundDevices.values();
+	}
+
+	public synchronized Collection<Actor> listPhysicallyActors() throws IOException {
+		final LinkedList<Actor> ret = new LinkedList<Actor>();
+		for (final PhysicallyDevice dev : listPhysicalDevices())
+			for (final Actor act : dev.listActors())
+				ret.add(act);
+		return ret;
+	}
+
+	public synchronized Collection<PhysicallySensor> listPhysicallySensors() throws IOException {
+		final LinkedList<PhysicallySensor> ret = new LinkedList<PhysicallySensor>();
+		for (final PhysicallyDevice dev : listPhysicalDevices())
+			for (final Sensor sen : dev.listSensors())
+				ret.add((PhysicallySensor) sen);
+		return ret;
+	}
+
+	public synchronized void resetDevices() {
+		foundDevices = null;
+	}
+
 	private PhysicallyDevice identifyModule(final Integer clientAddr) throws IOException {
 		PhysicallyDevice moduleImpl = null;
 		final HwVer hwVer = bus.readHwVer(clientAddr);
@@ -366,27 +392,6 @@ public class Registry {
 		return moduleImpl;
 	}
 
-	public synchronized Collection<PhysicallyDevice> listPhysicalDevices() throws IOException {
-		loadPhysicallyDevices();
-		return foundDevices.values();
-	}
-
-	public synchronized Collection<Actor> listPhysicallyActors() throws IOException {
-		final LinkedList<Actor> ret = new LinkedList<Actor>();
-		for (final PhysicallyDevice dev : listPhysicalDevices())
-			for (final Actor act : dev.listActors())
-				ret.add(act);
-		return ret;
-	}
-
-	public synchronized Collection<PhysicallySensor> listPhysicallySensors() throws IOException {
-		final LinkedList<PhysicallySensor> ret = new LinkedList<PhysicallySensor>();
-		for (final PhysicallyDevice dev : listPhysicalDevices())
-			for (final Sensor sen : dev.listSensors())
-				ret.add((PhysicallySensor) sen);
-		return ret;
-	}
-
 	private synchronized void loadPhysicallyDevices() throws IOException {
 		if (foundDevices == null) {
 			foundDevices = new TreeMap<Integer, PhysicallyDevice>();
@@ -397,10 +402,6 @@ public class Registry {
 					foundDevices.put(clientAddr, moduleImpl);
 			}
 		}
-	}
-
-	public synchronized void resetDevices() {
-		foundDevices = null;
 	}
 
 }

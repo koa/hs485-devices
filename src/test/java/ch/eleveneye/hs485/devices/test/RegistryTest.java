@@ -1,14 +1,12 @@
 package ch.eleveneye.hs485.devices.test;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.eleveneye.hs485.api.HS485;
 import ch.eleveneye.hs485.device.Dimmer;
@@ -21,12 +19,14 @@ import ch.eleveneye.hs485.device.physically.PhysicallyDevice;
 public class RegistryTest {
 
 	private static HS485	bus;
+	private static Logger	log	= LoggerFactory.getLogger(RegistryTest.class);
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		final URL resourceURL = RegistryTest.class.getResource("/ch/eleveneye/hs485/config/logging.properties");
-		PropertyConfigurator.configure(resourceURL);
-		Logger.getRootLogger().setLevel(Level.INFO);
+		// final URL resourceURL =
+		// RegistryTest.class.getResource("/ch/eleveneye/hs485/config/logging.properties");
+		// PropertyConfigurator.configure(resourceURL);
+		// Logger.getRootLogger().setLevel(Level.INFO);
 		// bus = new HS485("/dev/ttyUSB0", 3);
 	}
 
@@ -59,10 +59,9 @@ public class RegistryTest {
 			for (final Actor physicallyActor : physicallyActors)
 				if (physicallyActor instanceof Dimmer) {
 					final Dimmer dimmer = (Dimmer) physicallyActor;
-					System.out.println(" -" + physicallyActor + ", " + Integer.toHexString(dimmer.getDimmValue()));
+					log.info(" -" + physicallyActor + ", " + Integer.toHexString(dimmer.getDimmValue()));
 				} else if (physicallyActor instanceof SwitchingActor)
-					System.out.println(" -" + physicallyActor + ", " + (((SwitchingActor) physicallyActor).isOn() ? "On" : "Off"));
-
+					log.info(" -" + physicallyActor + ", " + (((SwitchingActor) physicallyActor).isOn() ? "On" : "Off"));
 		}
 		/*
 		 * for (Device device : devices) { Collection<Actor> actors =

@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.eleveneye.hs485.api.data.HwVer;
 import ch.eleveneye.hs485.api.data.SwVer;
@@ -203,7 +204,7 @@ public class HS485D extends AbstractDevice {
 	private static final Map<String, ActorType>	actors						= new HashMap<String, ActorType>();
 	private static final InputConfig[]					choices						= new InputConfig[InputType.values().length];
 
-	private static Logger												log								= Logger.getLogger(HS485D.class);
+	private static Logger												log								= LoggerFactory.getLogger(HS485D.class);
 
 	private static final String									VAR_DIRECT_OUTPUT	= "direct-output";
 
