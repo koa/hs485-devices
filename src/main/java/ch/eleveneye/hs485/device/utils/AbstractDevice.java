@@ -285,9 +285,13 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 	protected void dumpVariable(final Collection<Variable> var, final String baseName, final int depth) throws IOException {
 		for (final Variable variable : var) {
 			final String currentName = baseName + variable.getName();
-			if (variable instanceof NumberVariable)
-				log.info(" " + currentName + "=" + readVariable(currentName));
-			else if (variable instanceof ChoiceVariable) {
+			if (variable instanceof NumberVariable) {
+				final int value = readVariable(currentName);
+				if (value == -1 || value == 255 || value == 65535)
+					// skip default-values
+					continue;
+				log.info(" " + currentName + "=" + value);
+			} else if (variable instanceof ChoiceVariable) {
 				final ChoiceVariable choice = (ChoiceVariable) variable;
 				final int value = readVariable(currentName);
 				String valueStr = Integer.toHexString(value);
