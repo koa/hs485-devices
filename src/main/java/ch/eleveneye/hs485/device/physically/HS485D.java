@@ -145,8 +145,8 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 		}
 	}
 
-	private final class HS485SSensor extends AbstractSensor implements PairableSensor, KeySensor {
-		private HS485SSensor(final int sensorNr) {
+	private final class HS485DSensor extends AbstractSensor implements PairableSensor, KeySensor {
+		private HS485DSensor(final int sensorNr) {
 			super(sensorNr);
 		}
 
@@ -360,9 +360,9 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 	private void loadSensorList() throws IOException {
 		if (sensorList == null)
 			if (isSensorPaired())
-				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0) });
+				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485DSensor(0) });
 			else
-				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485SSensor(0), new HS485SSensor(1) });
+				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485DSensor(0), new HS485DSensor(1) });
 	}
 
 }
