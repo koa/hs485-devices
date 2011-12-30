@@ -8,20 +8,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 import ch.eleveneye.hs485.api.data.HwVer;
 import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.device.ActorType;
 import ch.eleveneye.hs485.device.KeySensor;
-import ch.eleveneye.hs485.device.Registry;
 import ch.eleveneye.hs485.device.Sensor;
-import ch.eleveneye.hs485.device.SensorType;
 import ch.eleveneye.hs485.device.TimedActor;
-import ch.eleveneye.hs485.device.config.ConfigData;
-import ch.eleveneye.hs485.device.config.InputPairConfig;
-import ch.eleveneye.hs485.device.config.InputPairConfig.InputConfig;
-import ch.eleveneye.hs485.device.config.InputType;
 import ch.eleveneye.hs485.device.config.PairMode;
 import ch.eleveneye.hs485.device.config.TimeMode;
 import ch.eleveneye.hs485.device.utils.AbstractActor;
@@ -31,10 +24,9 @@ import ch.eleveneye.hs485.memory.ArrayVariable;
 import ch.eleveneye.hs485.memory.ChoiceEntry;
 import ch.eleveneye.hs485.memory.ChoiceVariable;
 import ch.eleveneye.hs485.memory.ModuleType;
-import ch.eleveneye.hs485.memory.ModuleType.ConfigBuilder;
 import ch.eleveneye.hs485.memory.NumberVariable;
 
-public class HS485S extends AbstractDevice {
+public class HS485S extends AbstractDevice implements PairedSensorDevice {
 
 	private final class HS485SActor extends AbstractActor implements TimedActor {
 		private HS485SActor(final int actorNr) {
@@ -172,13 +164,8 @@ public class HS485S extends AbstractDevice {
 	}
 
 	private static final Map<String, ActorType>	actors	= new HashMap<String, ActorType>();
-	private static final InputConfig[]					choices	= new InputConfig[InputType.values().length];
 
 	static {
-		HS485S.choices[InputType.PUSH_W_LED.ordinal()] = new InputConfig("Taster mit LED", SensorType.TWO_WIRE, SensorType.ONE_WIRE);
-		HS485S.choices[InputType.PUSH_WO_LED.ordinal()] = new InputConfig("Taster ohne LED", SensorType.TWO_WIRE, SensorType.ONE_WIRE);
-		HS485S.choices[InputType.SWITCH_W_LED.ordinal()] = new InputConfig("Schalter mit LED", SensorType.TWO_WIRE, SensorType.ONE_WIRE);
-		HS485S.choices[InputType.SWITCH_WO_LED.ordinal()] = new InputConfig("Schalter ohne LED", SensorType.TWO_WIRE, SensorType.ONE_WIRE);
 		HS485S.actors.put("1", ActorType.HIGH_VOLTAGE);
 		HS485S.actors.put("2", ActorType.HIGH_VOLTAGE);
 	}
@@ -192,26 +179,6 @@ public class HS485S extends AbstractDevice {
 		hs485s.setEepromSize(512);
 		hs485s.setImplementingClass(HS485S.class);
 		hs485s.setWidth(2);
-		hs485s.setConfigBuilder(new ConfigBuilder() {
-			public Collection<Integer> listAvailableModules(final Registry bus) throws IOException {
-				final TreeSet<Integer> ret = new TreeSet<Integer>();
-				for (final PhysicallyDevice device : bus.listPhysicalDevices())
-					if (device instanceof HS485S) {
-						final HS485S dev = (HS485S) device;
-						ret.add(dev.deviceAddr);
-					}
-				return ret;
-			}
-
-			public ConfigData makeNewConfigData() {
-				final InputPairConfig config = new InputPairConfig(HS485S.actors);
-				config.setInputChoices(HS485S.choices);
-				config.setJointInput(true);
-				config.setInput1Type(0);
-				config.setInput2Type(0);
-				return config;
-			}
-		});
 
 		final ChoiceVariable inputType = new ChoiceVariable();
 		inputType.setAddress(0);
@@ -315,15 +282,6 @@ public class HS485S extends AbstractDevice {
 		return 2;
 	}
 
-	public ConfigData getConfig() throws IOException {
-		final InputPairConfig config = new InputPairConfig(HS485S.actors);
-		config.setInputChoices(HS485S.choices);
-		config.setJointInput(isInputPaired());
-		config.setInput1Type(InputType.valueOf(readVariableResolved("input[0].sensor-type").toUpperCase().replaceAll("-", "_")).ordinal());
-		config.setInput2Type(InputType.valueOf(readVariableResolved("input[1].sensor-type").toUpperCase().replaceAll("-", "_")).ordinal());
-		return config;
-	}
-
 	public int getInputPairCount() {
 		return 1;
 	}
@@ -348,14 +306,6 @@ public class HS485S extends AbstractDevice {
 	public synchronized Collection<Sensor> listSensors() throws IOException {
 		loadSensorList();
 		return new ArrayList<Sensor>(sensorList);
-	}
-
-	public void setConfig(final ConfigData newConfig) throws IOException {
-		final InputPairConfig config = (InputPairConfig) newConfig;
-		setInputPairMode(0, config.isJointInput() ? PairMode.JOINT : PairMode.SPLIT);
-		final InputType[] inputTypeValues = InputType.values();
-		writeChoice("input[0].sensor-type", inputTypeValues[config.getInput1Type()].name().toLowerCase().replaceAll("_", "-"));
-		writeChoice("input[1].sensor-type", inputTypeValues[config.getInput2Type()].name().toLowerCase().replaceAll("_", "-"));
 	}
 
 	public synchronized void setInputPairMode(final int pairNr, final PairMode mode) throws IOException {

@@ -14,6 +14,7 @@ import ch.eleveneye.hs485.device.Registry;
 import ch.eleveneye.hs485.device.SwitchingActor;
 import ch.eleveneye.hs485.device.config.PairMode;
 import ch.eleveneye.hs485.device.physically.Actor;
+import ch.eleveneye.hs485.device.physically.PairedSensorDevice;
 import ch.eleveneye.hs485.device.physically.PhysicallyDevice;
 
 public class RegistryTest {
@@ -43,9 +44,13 @@ public class RegistryTest {
 		final Collection<PhysicallyDevice> physicallyDevices = registry.listPhysicalDevices();
 		for (final PhysicallyDevice physicallyDevice : physicallyDevices) {
 			// Device device = registry.getDevice(0xf77);
-			for (int i = 0; i < physicallyDevice.getInputPairCount(); i++)
-				physicallyDevice.setInputPairMode(i, PairMode.JOINT);
-			physicallyDevice.commit();
+			if (physicallyDevice instanceof PairedSensorDevice) {
+				final PairedSensorDevice pairedDevice = (PairedSensorDevice) physicallyDevice;
+				for (int i = 0; i < pairedDevice.getInputPairCount(); i++)
+					pairedDevice.setInputPairMode(i, PairMode.JOINT);
+				physicallyDevice.commit();
+
+			}
 			// System.out.println(device);
 			// device.dumpVariables();
 

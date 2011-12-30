@@ -1,6 +1,5 @@
 package ch.eleveneye.hs485.memory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,28 +8,19 @@ import java.util.List;
 import ch.eleveneye.hs485.api.data.HwVer;
 import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.device.Device;
-import ch.eleveneye.hs485.device.Registry;
-import ch.eleveneye.hs485.device.config.ConfigData;
 
 public class ModuleType {
-	public static interface ConfigBuilder {
-		public Collection<Integer> listAvailableModules(Registry bus) throws IOException;
 
-		public ConfigData makeNewConfigData();
-	}
-
-	private ConfigBuilder	configBuilder;
+	List<Variable>				variables;
 
 	private int						eepromSize;
 
 	private HwVer					hwVer;
 
 	private Class<Device>	implementingClass;
-
 	private String				name;
-	private SwVer					swVer;
 
-	List<Variable>				variables;
+	private SwVer					swVer;
 
 	private int						width;
 
@@ -40,13 +30,6 @@ public class ModuleType {
 
 	public void addVariable(final Variable var) {
 		variables.add(var);
-	}
-
-	/**
-	 * @return the configBuilder
-	 */
-	public ConfigBuilder getConfigBuilder() {
-		return configBuilder;
 	}
 
 	public int getEepromSize() {
@@ -92,14 +75,6 @@ public class ModuleType {
 
 	public Collection<Variable> listVariables() {
 		return Collections.unmodifiableCollection(variables);
-	}
-
-	/**
-	 * @param configBuilder
-	 *          the configBuilder to set
-	 */
-	public void setConfigBuilder(final ConfigBuilder configBuilder) {
-		this.configBuilder = configBuilder;
 	}
 
 	public void setEepromSize(final int eepromSize) {

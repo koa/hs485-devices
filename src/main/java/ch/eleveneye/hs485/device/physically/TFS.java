@@ -1,31 +1,19 @@
 package ch.eleveneye.hs485.device.physically;
 
-import java.awt.BorderLayout;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import ch.eleveneye.hs485.api.data.HwVer;
 import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.api.data.TFSValue;
-import ch.eleveneye.hs485.device.ActorType;
-import ch.eleveneye.hs485.device.Registry;
 import ch.eleveneye.hs485.device.Sensor;
-import ch.eleveneye.hs485.device.SensorType;
 import ch.eleveneye.hs485.device.TFSensor;
-import ch.eleveneye.hs485.device.config.ConfigData;
 import ch.eleveneye.hs485.device.config.PairMode;
 import ch.eleveneye.hs485.device.utils.AbstractDevice;
 import ch.eleveneye.hs485.memory.ModuleType;
-import ch.eleveneye.hs485.memory.ModuleType.ConfigBuilder;
 
 public class TFS extends AbstractDevice {
 
@@ -55,45 +43,6 @@ public class TFS extends AbstractDevice {
 
 	}
 
-	private final static class TFSConfigData implements ConfigData {
-		private static final TreeMap<String, SensorType>	SENSORS	= new TreeMap<String, SensorType>();
-		static {
-			TFSConfigData.SENSORS.put("sensor", SensorType.TEMP);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#clone()
-		 */
-		@Override
-		public ConfigData clone() throws CloneNotSupportedException {
-			return (ConfigData) super.clone();
-		}
-
-		public Map<String, ActorType> connectableActors() {
-			return new TreeMap<String, ActorType>();
-		}
-
-		public Map<String, SensorType> connectableSensors() {
-			return new TreeMap<String, SensorType>();
-		}
-
-		public Map<String, ActorType> fixedActors() {
-			return new TreeMap<String, ActorType>();
-		}
-
-		public Map<String, SensorType> fixedSensors() {
-			return TFSConfigData.SENSORS;
-		}
-
-		public void showUI(final JPanel panel) {
-			panel.removeAll();
-			panel.setLayout(new BorderLayout());
-			panel.add(new JLabel("TFS kennt keine Konfigurationsparameter"), BorderLayout.CENTER);
-		}
-	}
-
 	public static Collection<ModuleType> getAvailableConfig() {
 		final ModuleType tfsv13 = new ModuleType();
 		tfsv13.setEepromSize(512);
@@ -102,21 +51,7 @@ public class TFS extends AbstractDevice {
 		tfsv13.setSwVer(new SwVer((byte) 1, (byte) 3));
 		tfsv13.setImplementingClass(TFS.class);
 		tfsv13.setWidth(1);
-		tfsv13.setConfigBuilder(new ConfigBuilder() {
-			public Collection<Integer> listAvailableModules(final Registry bus) throws IOException {
-				final TreeSet<Integer> ret = new TreeSet<Integer>();
-				for (final PhysicallyDevice device : bus.listPhysicalDevices())
-					if (device instanceof TFS) {
-						final TFS dev = (TFS) device;
-						ret.add(dev.deviceAddr);
-					}
-				return ret;
-			}
 
-			public ConfigData makeNewConfigData() {
-				return new TFSConfigData();
-			}
-		});
 		return Arrays.asList(new ModuleType[] { tfsv13 });
 	}
 
@@ -133,10 +68,6 @@ public class TFS extends AbstractDevice {
 	@Override
 	public int getActorCount() {
 		return 0;
-	}
-
-	public ConfigData getConfig() throws IOException {
-		return new TFSConfigData();
 	}
 
 	public int getInputPairCount() {
@@ -157,10 +88,6 @@ public class TFS extends AbstractDevice {
 
 	public Collection<Sensor> listSensors() throws IOException {
 		return Arrays.asList(new Sensor[] { sensor });
-	}
-
-	public void setConfig(final ConfigData newConfig) throws IOException {
-		// wird nicht benötigt
 	}
 
 	public void setInputPairMode(final int pairNr, final PairMode mode) throws IOException {

@@ -232,11 +232,6 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		return deviceAddr;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;
@@ -253,6 +248,12 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		currentConfig = config;
 		oldMemory = null;
 		currentMemory = null;
+	}
+
+	public synchronized byte[] readCurrentMemory() {
+		final byte[] ret = new byte[currentMemory.length];
+		System.arraycopy(currentMemory, 0, ret, 0, ret.length);
+		return ret;
 	}
 
 	@Override

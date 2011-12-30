@@ -21,7 +21,6 @@ import ch.eleveneye.hs485.api.HS485Factory;
 import ch.eleveneye.hs485.api.data.HwVer;
 import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.device.physically.Actor;
-import ch.eleveneye.hs485.device.physically.ControllUnit;
 import ch.eleveneye.hs485.device.physically.HS485D;
 import ch.eleveneye.hs485.device.physically.HS485S;
 import ch.eleveneye.hs485.device.physically.IO127;
@@ -36,30 +35,17 @@ import ch.eleveneye.hs485.device.virtual.SwitchActorData;
 import ch.eleveneye.hs485.device.virtual.utils.DefaultEventSource;
 import ch.eleveneye.hs485.event.EventHandler;
 import ch.eleveneye.hs485.memory.ModuleType;
-import ch.eleveneye.hs485.memory.ModuleType.ConfigBuilder;
 
 public class Registry {
 
 	public static class ModuleDescription {
-		private ConfigBuilder	configBuilder;
-		private int						width;
-
-		/**
-		 * @return the configBuilder
-		 */
-		public ConfigBuilder getConfigBuilder() {
-			return configBuilder;
-		}
+		private int	width;
 
 		/**
 		 * @return the width
 		 */
 		public int getWidth() {
 			return width;
-		}
-
-		public void setConfigBuilder(final ConfigBuilder configBuilder) {
-			this.configBuilder = configBuilder;
 		}
 
 		/**
@@ -139,7 +125,6 @@ public class Registry {
 	public static Map<String, ModuleDescription> listModuleDescription() {
 		final Map<String, ModuleDescription> ret = new HashMap<String, ModuleDescription>();
 		final ModuleDescription centralDescription = new ModuleDescription();
-		centralDescription.setConfigBuilder(ControllUnit.getConfigBuilder());
 		centralDescription.setWidth(1);
 		ret.put("Zentrale", centralDescription);
 		for (final ModuleType nextModule : Registry.configRegistry) {
@@ -149,7 +134,6 @@ public class Registry {
 				ret.put(nextModule.getName(), moduleDescription);
 			}
 			moduleDescription.setWidth(nextModule.getWidth());
-			moduleDescription.setConfigBuilder(nextModule.getConfigBuilder());
 		}
 		return ret;
 	}
