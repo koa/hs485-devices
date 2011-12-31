@@ -12,6 +12,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.eleveneye.hs485.api.MessageHandler;
 import ch.eleveneye.hs485.api.data.HwVer;
 import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.device.ActorType;
@@ -172,6 +173,12 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 			if (directValue != 0xfe)
 				ret.add(getActor(0));
 			return ret;
+		}
+
+		@Override
+		public void registerHandler(final MessageHandler handler) throws IOException {
+			bus.addKeyHandler(deviceAddr, (byte) sensorNr, handler);
+			addInputTargetRaw(sensorNr, bus.listOwnAddresse()[0], 1);
 		}
 
 		public void removeActor(final Actor target) throws IOException {

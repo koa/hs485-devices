@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import ch.eleveneye.hs485.api.MessageHandler;
 import ch.eleveneye.hs485.api.data.HwVer;
 import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.device.ActorType;
@@ -31,10 +32,12 @@ public class IO127 extends AbstractDevice {
 			super(actorNr);
 		}
 
+		@Override
 		public int getModuleAddr() {
 			return deviceAddr;
 		}
 
+		@Override
 		public TimeMode getTimeMode() throws IOException {
 			switch (readVariable("output[" + (actorNr - 12) + "].timer-mode")) {
 			case 0xff:
@@ -48,27 +51,33 @@ public class IO127 extends AbstractDevice {
 			return null;
 		}
 
+		@Override
 		public int getTimeValue() throws IOException {
 			return readVariable("output-time[" + (actorNr - 12) + "].time");
 		}
 
+		@Override
 		public boolean getToggleBit() throws IOException {
 			return readVariable("output[" + (actorNr - 12) + "].toggle") != 0;
 		}
 
+		@Override
 		public boolean isOn() throws IOException {
 			return bus.readActor(deviceAddr, (byte) actorNr) > 0;
 		}
 
+		@Override
 		public void setOff() throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0x00);
 
 		}
 
+		@Override
 		public void setOn() throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0x01);
 		}
 
+		@Override
 		public void setTimeMode(final TimeMode value) throws IOException {
 			final String variableName = "output[" + (actorNr - 12) + "].timer-mode";
 			switch (value) {
@@ -84,14 +93,17 @@ public class IO127 extends AbstractDevice {
 			}
 		}
 
+		@Override
 		public void setTimeValue(final int value) throws IOException {
 			writeVariable("output-time[" + (actorNr - 12) + "].time", value);
 		}
 
+		@Override
 		public void setToggleBit(final boolean value) throws IOException {
 			writeVariable("output[" + (actorNr - 12) + "].toggle", value ? 0xff : 0x00);
 		}
 
+		@Override
 		public void toggle() throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0xff);
 		}
@@ -108,6 +120,7 @@ public class IO127 extends AbstractDevice {
 			super(sensorNr);
 		}
 
+		@Override
 		public void addActor(final Actor target) throws IOException {
 			addInputTargetRaw(sensorNr, target.getModuleAddr(), target.getActorNr());
 		}
@@ -124,14 +137,23 @@ public class IO127 extends AbstractDevice {
 			}
 		}
 
+		@Override
 		public int getModuleAddr() {
 			return deviceAddr;
 		}
 
+		@Override
 		public Collection<Actor> listAssignedActors() throws IOException {
 			return listAssignedActorsRaw(sensorNr);
 		}
 
+		@Override
+		public void registerHandler(final MessageHandler handler) throws IOException {
+			bus.addKeyHandler(deviceAddr, (byte) sensorNr, handler);
+			addInputTargetRaw(sensorNr, bus.listOwnAddresse()[0], 1);
+		}
+
+		@Override
 		public void removeActor(final Actor target) throws IOException {
 			removeInputTargetRaw(sensorNr, target.getModuleAddr(), target.getActorNr());
 		}
@@ -270,6 +292,7 @@ public class IO127 extends AbstractDevice {
 
 	private LinkedList<PhysicallySensor>	sensorList;
 
+	@Override
 	public Actor getActor(final int actorNr) throws IOException {
 		loadActors();
 		return actorList.get(actorNr - 12);
@@ -280,6 +303,7 @@ public class IO127 extends AbstractDevice {
 		return ACTOR_COUNT;
 	}
 
+	@Override
 	public PhysicallySensor getSensor(final int sensorNr) throws IOException {
 		loadSensorList();
 		for (final PhysicallySensor physicallySensor : sensorList)
@@ -288,11 +312,13 @@ public class IO127 extends AbstractDevice {
 		return null;
 	}
 
+	@Override
 	public synchronized Collection<Actor> listActors() throws IOException {
 		loadActors();
 		return new ArrayList<Actor>(actorList);
 	}
 
+	@Override
 	public synchronized Collection<Sensor> listSensors() throws IOException {
 		loadSensorList();
 		return new ArrayList<Sensor>(sensorList);
