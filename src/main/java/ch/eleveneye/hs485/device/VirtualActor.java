@@ -20,10 +20,12 @@ class VirtualActor implements Actor {
 		this.eventSource = eventSource;
 	}
 
+	@Override
 	public int getActorNr() {
 		return actorNr;
 	}
 
+	@Override
 	public int getModuleAddr() {
 		return moduleAddr;
 	}

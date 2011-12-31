@@ -30,6 +30,7 @@ public class KeyData implements EventData {
 		return key;
 	}
 
+	@Override
 	public long getEventTime() {
 		return eventTime;
 	}

@@ -165,10 +165,12 @@ public class Registry {
 			final Dimmer dimmer = (Dimmer) actor;
 			return new EventSink<EventData>() {
 
+				@Override
 				public String getRoleName() {
 					return "input";
 				}
 
+				@Override
 				public void takeEvent(final EventData data) {
 					try {
 						if (data instanceof DimmActorData) {
@@ -188,10 +190,12 @@ public class Registry {
 			final SwitchingActor swi = (SwitchingActor) actor;
 			return new EventSink<EventData>() {
 
+				@Override
 				public String getRoleName() {
 					return "input";
 				}
 
+				@Override
 				public void takeEvent(final EventData data) {
 					try {
 						if (data instanceof SwitchActorData)

@@ -153,6 +153,7 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		}
 	}
 
+	@Override
 	public synchronized void commit() throws IOException {
 		if (oldMemory == null)
 			return;
@@ -228,6 +229,7 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		return true;
 	}
 
+	@Override
 	public int getAddress() {
 		return deviceAddr;
 	}
@@ -241,6 +243,7 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		return result;
 	}
 
+	@Override
 	public void init(final int deviceAddr, final Registry registry, final ModuleType config) {
 		this.deviceAddr = deviceAddr;
 		this.registry = registry;

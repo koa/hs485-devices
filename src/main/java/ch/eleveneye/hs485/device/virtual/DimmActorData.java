@@ -16,6 +16,7 @@ public class DimmActorData implements EventData {
 		return dimmValue;
 	}
 
+	@Override
 	public long getEventTime() {
 		return eventTime;
 	}

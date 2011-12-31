@@ -14,6 +14,7 @@ public abstract class AbstractSensor implements PhysicallySensor, KeySensor {
 		this.sensorNr = sensorNr;
 	}
 
+	@Override
 	public int getSensorNr() {
 		return sensorNr;
 	}
@@ -28,6 +29,7 @@ public abstract class AbstractSensor implements PhysicallySensor, KeySensor {
 		return sensorNr / 2;
 	}
 
+	@Override
 	public void removeAllActors() throws IOException {
 		for (Actor actor : listAssignedActors()) {
 			removeActor(actor);

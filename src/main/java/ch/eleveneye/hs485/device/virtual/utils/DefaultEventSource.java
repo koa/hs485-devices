@@ -18,10 +18,12 @@ public class DefaultEventSource<E extends EventData> implements EventSource<E> {
 		this.roleName = roleName;
 	}
 
+	@Override
 	public void addSink(EventSink<E> sink) {
 		registeredSinks.add(sink);
 	}
 
+	@Override
 	public void removeSink(EventSink<E> sink) {
 		registeredSinks.remove(sink);
 	}
@@ -31,14 +33,17 @@ public class DefaultEventSource<E extends EventData> implements EventSource<E> {
 			sink.takeEvent(event);
 	}
 
+	@Override
 	public String getRoleName() {
 		return roleName;
 	}
 
+	@Override
 	public void removeAllSinks() {
 		registeredSinks.clear();
 	}
 
+	@Override
 	public Collection<EventSink<E>> listAllSinks() {
 		return Collections.unmodifiableCollection(registeredSinks);
 	}

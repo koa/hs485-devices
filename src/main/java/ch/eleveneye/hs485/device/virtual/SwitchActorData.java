@@ -18,6 +18,7 @@ public class SwitchActorData implements EventData {
 		return event;
 	}
 
+	@Override
 	public long getEventTime() {
 		return eventTime;
 	}

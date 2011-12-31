@@ -25,10 +25,12 @@ public class TFS extends AbstractDevice {
 			registeredActors = new LinkedList<Actor>();
 		}
 
+		@Override
 		public int getModuleAddr() {
 			return deviceAddr;
 		}
 
+		@Override
 		public int getSensorNr() {
 			return 0;
 		}
@@ -37,6 +39,7 @@ public class TFS extends AbstractDevice {
 			return registeredActors;
 		}
 
+		@Override
 		public TFSValue readTF() throws IOException {
 			return bus.readTemp(deviceAddr);
 		}
@@ -61,6 +64,7 @@ public class TFS extends AbstractDevice {
 		sensor = new TFSensorImpl();
 	}
 
+	@Override
 	public Actor getActor(final int actorNr) throws IOException {
 		return null;
 	}
@@ -78,14 +82,17 @@ public class TFS extends AbstractDevice {
 		return null;
 	}
 
+	@Override
 	public PhysicallySensor getSensor(final int sensorNr) throws IOException {
 		return sensor;
 	}
 
+	@Override
 	public Collection<Actor> listActors() throws IOException {
 		return new ArrayList<Actor>(0);
 	}
 
+	@Override
 	public Collection<Sensor> listSensors() throws IOException {
 		return Arrays.asList(new Sensor[] { sensor });
 	}
