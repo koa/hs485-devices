@@ -32,8 +32,6 @@ import ch.eleveneye.hs485.device.virtual.EventData;
 import ch.eleveneye.hs485.device.virtual.EventSink;
 import ch.eleveneye.hs485.device.virtual.KeyData;
 import ch.eleveneye.hs485.device.virtual.SwitchActorData;
-import ch.eleveneye.hs485.device.virtual.utils.DefaultEventSource;
-import ch.eleveneye.hs485.event.EventHandler;
 import ch.eleveneye.hs485.memory.ModuleType;
 
 public class Registry {
@@ -54,44 +52,6 @@ public class Registry {
 		 */
 		public void setWidth(final int width) {
 			this.width = width;
-		}
-	}
-
-	protected static final class VirtualKeyHandler implements EventHandler {
-		private final DefaultEventSource<KeyData>	source;
-
-		protected VirtualKeyHandler(final DefaultEventSource<KeyData> source) {
-			this.source = source;
-		}
-
-		public void doEvent(final byte eventCode) throws IOException {
-			final byte keyType = (byte) (eventCode >> 6 & 0x3);
-			final byte eventType = (byte) (eventCode & 0x3);
-			KeyData.Key key = null;
-			switch (keyType) {
-			case KEY_TYPE_DOWN:
-				key = KeyData.Key.DOWN;
-				break;
-			case KEY_TYPE_UP:
-				key = KeyData.Key.UP;
-				break;
-			case KEY_TYPE_TOGGLE:
-				key = KeyData.Key.TOGGLE;
-				break;
-			}
-			KeyData.Event event = null;
-			switch (eventType) {
-			case EVENT_TYPE_HOLDED:
-				event = KeyData.Event.HOLD;
-				break;
-			case EVENT_TYPE_PRESSED:
-				event = KeyData.Event.PRESS;
-				break;
-			case EVENT_TYPE_RELEASED:
-				event = KeyData.Event.RELEASE;
-				break;
-			}
-			source.fireEvent(new KeyData(key, event));
 		}
 	}
 
@@ -246,72 +206,6 @@ public class Registry {
 		}
 		return null;
 	}
-
-	// public synchronized EventSource getEventSource(final PhysicallySensor
-	// sensor) throws IOException {
-	// if (sensor instanceof KeySensor) {
-	// final KeySensor keySens = (KeySensor) sensor;
-	// final Set<Integer> ownAddresses = new TreeSet<Integer>();
-	// for (final int address : bus.listOwnAddresse())
-	// ownAddresses.add(address);
-	//
-	// for (final Actor act : keySens.listAssignedActors())
-	// if (act instanceof VirtualActor) {
-	// final VirtualActor virtActor = (VirtualActor) act;
-	// final Map<Byte, VirtualActor> moduleMap =
-	// virtualKeyActors.get(virtActor.getModuleAddr());
-	// if (moduleMap == null)
-	// continue;
-	// if (moduleMap.get(virtActor.getActorNr()) == null)
-	// continue;
-	// return virtActor.getEventSource();
-	// }
-	// for (final int address : ownAddresses) {
-	// Map<Byte, VirtualActor> moduleMap = virtualKeyActors.get(address);
-	// if (moduleMap == null) {
-	// moduleMap = new HashMap<Byte, VirtualActor>();
-	// virtualKeyActors.put(address, moduleMap);
-	// }
-	// for (int actorNr = 0; actorNr < 255; actorNr++)
-	// if (!moduleMap.containsKey(new Byte((byte) actorNr))) {
-	// final DefaultEventSource<KeyData> eventSource = new
-	// DefaultEventSource<KeyData>(sensor.toString());
-	// final VirtualActor newActor = new VirtualActor(actorNr, address,
-	// eventSource);
-	// moduleMap.put(new Byte((byte) actorNr), newActor);
-	// keySens.addActor(newActor);
-	// bus.addKeyHandler(address, (byte) actorNr, new
-	// VirtualKeyHandler(eventSource));
-	// }
-	// }
-	//
-	// } else if (sensor instanceof TFSensor) {
-	// final TFSensor tfSensor = (TFSensor) sensor;
-	// final DefaultEventSource<TFSData> source = new
-	// DefaultEventSource<TFSData>(sensor.toString());
-	// final Thread runner = new Thread(new Runnable() {
-	// public void run() {
-	// try {
-	// while (!Thread.interrupted()) {
-	// Thread.sleep(30 * 1000);
-	// try {
-	// source.fireEvent(new TFSData(tfSensor.readTF()));
-	// } catch (final IOException e) {
-	// Registry.log.warn("Fehler bei Kommunikation mit Sensor " + sensor, e);
-	// }
-	// }
-	// } catch (final InterruptedException e) {
-	// Registry.log.warn("Polling-Thread von Sensor " + sensor +
-	// " wurde unterbrochen", e);
-	// }
-	// }
-	// });
-	// runner.setDaemon(true);
-	// runner.start();
-	// return source;
-	// }
-	// return null;
-	// }
 
 	public PhysicallyDevice getPhysicallyDevice(final int address) throws IOException {
 		loadPhysicallyDevices();
