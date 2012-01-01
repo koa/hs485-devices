@@ -183,6 +183,7 @@ public class Registry {
 	public synchronized void resetAllDevices() throws IOException {
 		for (final PhysicallyDevice dev : listPhysicalDevices())
 			dev.reset();
+		bus.removeHandlers();
 	}
 
 	public void rollback() throws IOException {
