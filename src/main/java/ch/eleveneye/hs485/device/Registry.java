@@ -27,9 +27,6 @@ import ch.eleveneye.hs485.device.physically.IO127;
 import ch.eleveneye.hs485.device.physically.PhysicallyDevice;
 import ch.eleveneye.hs485.device.physically.PhysicallySensor;
 import ch.eleveneye.hs485.device.physically.TFS;
-import ch.eleveneye.hs485.device.virtual.DimmActorData;
-import ch.eleveneye.hs485.device.virtual.EventData;
-import ch.eleveneye.hs485.device.virtual.EventSink;
 import ch.eleveneye.hs485.device.virtual.KeyData;
 import ch.eleveneye.hs485.device.virtual.SwitchActorData;
 import ch.eleveneye.hs485.memory.ModuleType;
@@ -160,57 +157,6 @@ public class Registry {
 		return bus;
 	}
 
-	public synchronized EventSink getEventSink(final Actor actor) throws IOException {
-		if (actor instanceof Dimmer) {
-			final Dimmer dimmer = (Dimmer) actor;
-			return new EventSink<EventData>() {
-
-				@Override
-				public String getRoleName() {
-					return "input";
-				}
-
-				@Override
-				public void takeEvent(final EventData data) {
-					try {
-						if (data instanceof DimmActorData) {
-							final DimmActorData dimmData = (DimmActorData) data;
-							dimmer.setDimmValue(dimmData.getDimmValue());
-						} else if (data instanceof SwitchActorData)
-							Registry.takeSwitchEvent(dimmer, (SwitchActorData) data);
-						else if (data instanceof KeyData)
-							Registry.takeKeyEvent(dimmer, (KeyData) data);
-					} catch (final IOException e) {
-						throw new RuntimeException(e);
-					}
-				}
-
-			};
-		} else if (actor instanceof SwitchingActor) {
-			final SwitchingActor swi = (SwitchingActor) actor;
-			return new EventSink<EventData>() {
-
-				@Override
-				public String getRoleName() {
-					return "input";
-				}
-
-				@Override
-				public void takeEvent(final EventData data) {
-					try {
-						if (data instanceof SwitchActorData)
-							Registry.takeSwitchEvent(swi, (SwitchActorData) data);
-						else if (data instanceof KeyData)
-							Registry.takeKeyEvent(swi, (KeyData) data);
-					} catch (final IOException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			};
-		}
-		return null;
-	}
-
 	public PhysicallyDevice getPhysicallyDevice(final int address) throws IOException {
 		loadPhysicallyDevices();
 		PhysicallyDevice device = foundDevices.get(address);
@@ -247,8 +193,20 @@ public class Registry {
 		return ret;
 	}
 
-	public synchronized void resetDevices() {
+	public synchronized void reloadDevices() {
 		foundDevices = null;
+		bus.removeHandlers();
+	}
+
+	public synchronized void resetAllDevices() throws IOException {
+		for (final PhysicallyDevice dev : listPhysicalDevices())
+			dev.reset();
+	}
+
+	public void rollback() throws IOException {
+		for (final PhysicallyDevice dev : listPhysicalDevices())
+			dev.rollback();
+
 	}
 
 	private PhysicallyDevice identifyModule(final Integer clientAddr) throws IOException {

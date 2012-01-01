@@ -3,6 +3,7 @@ package ch.eleveneye.hs485.device.utils;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -200,6 +201,18 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		}
 	}
 
+	public synchronized <T> T doInTransaction(final Callable<T> callable) throws IOException {
+		try {
+			final T ret = callable.call();
+			commit();
+			return ret;
+		} catch (final Exception e) {
+			log.warn("Error in Transaction, make rollback", e);
+			rollback();
+			throw new RuntimeException(e);
+		}
+	}
+
 	public void dumpVariables() throws IOException {
 		final Collection<Variable> variables = currentConfig.listVariables();
 		dumpVariable(variables, "", 0);
@@ -257,6 +270,22 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		final byte[] ret = new byte[currentMemory.length];
 		System.arraycopy(currentMemory, 0, ret, 0, ret.length);
 		return ret;
+	}
+
+	@Override
+	public synchronized void reset() throws IOException {
+		checkMemory();
+		reloadOnCommit = true;
+		for (int i = 0; i < currentMemory.length; i++)
+			currentMemory[i] = -1;
+		clearAllInputTargets();
+	}
+
+	@Override
+	public synchronized void rollback() throws IOException {
+		checkMemory();
+		reloadOnCommit = false;
+		System.arraycopy(oldMemory, 0, currentMemory, 0, oldMemory.length);
 	}
 
 	@Override

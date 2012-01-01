@@ -8,18 +8,22 @@ import ch.eleveneye.hs485.memory.ModuleType;
 
 public interface PhysicallyDevice extends Device {
 
-	public void commit() throws IOException;
+	void commit() throws IOException;
 
-	public Actor getActor(int actorNr) throws IOException;
+	Actor getActor(int actorNr) throws IOException;
 
-	public int getActorCount();
+	int getActorCount();
 
-	public int getAddress();
+	int getAddress();
 
-	public PhysicallySensor getSensor(int sensorNr) throws IOException;
+	PhysicallySensor getSensor(int sensorNr) throws IOException;
 
-	public void init(int deviceAddr, Registry registry, ModuleType config);
+	void init(int deviceAddr, Registry registry, ModuleType config);
 
-	// public void dumpVariables() throws IOException;
+	void reset() throws IOException;
+
+	void rollback() throws IOException;
+
+	// void dumpVariables() throws IOException;
 
 }
