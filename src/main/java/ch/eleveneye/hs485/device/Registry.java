@@ -28,8 +28,6 @@ import ch.eleveneye.hs485.device.physically.IO127;
 import ch.eleveneye.hs485.device.physically.PhysicallyDevice;
 import ch.eleveneye.hs485.device.physically.PhysicallySensor;
 import ch.eleveneye.hs485.device.physically.TFS;
-import ch.eleveneye.hs485.device.virtual.KeyData;
-import ch.eleveneye.hs485.device.virtual.SwitchActorData;
 import ch.eleveneye.hs485.memory.ModuleType;
 
 public class Registry {
@@ -101,35 +99,6 @@ public class Registry {
 			if (mod.getHwVer().equals(hwVer) && mod.getSwVer().equals(swVer))
 				return mod;
 		return null;
-	}
-
-	private static void takeKeyEvent(final SwitchingActor keyActor, final KeyData keyData) throws IOException {
-		if (keyData.getEvent() == KeyData.Event.PRESS)
-			switch (keyData.getKey()) {
-			case UP:
-				keyActor.setOn();
-				break;
-			case DOWN:
-				keyActor.setOff();
-				break;
-			case TOGGLE:
-				keyActor.toggle();
-				break;
-			}
-	}
-
-	private static void takeSwitchEvent(final SwitchingActor switchActor, final SwitchActorData switchData) throws IOException {
-		switch (switchData.getEvent()) {
-		case ON:
-			switchActor.setOn();
-			break;
-		case OFF:
-			switchActor.setOff();
-			break;
-		case TOGGLE:
-			switchActor.toggle();
-			break;
-		}
 	}
 
 	protected Map<Integer, PhysicallyDevice>	foundDevices	= null;

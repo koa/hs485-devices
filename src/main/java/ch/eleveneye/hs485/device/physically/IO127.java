@@ -10,8 +10,10 @@ import java.util.TreeMap;
 
 import ch.eleveneye.hs485.api.MessageHandler;
 import ch.eleveneye.hs485.api.data.HwVer;
+import ch.eleveneye.hs485.api.data.KeyMessage;
 import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.device.ActorType;
+import ch.eleveneye.hs485.device.KeyActor;
 import ch.eleveneye.hs485.device.KeySensor;
 import ch.eleveneye.hs485.device.Sensor;
 import ch.eleveneye.hs485.device.TimedActor;
@@ -27,7 +29,7 @@ import ch.eleveneye.hs485.memory.NumberVariable;
 
 public class IO127 extends AbstractDevice {
 
-	private final class IO127Actor extends AbstractActor implements TimedActor {
+	private final class IO127Actor extends AbstractActor implements TimedActor, KeyActor {
 		private IO127Actor(final int actorNr) {
 			super(actorNr);
 		}
@@ -64,6 +66,14 @@ public class IO127 extends AbstractDevice {
 		@Override
 		public boolean isOn() throws IOException {
 			return bus.readActor(deviceAddr, (byte) actorNr) > 0;
+		}
+
+		@Override
+		public void sendKeyMessage(final KeyMessage keyMessage) throws IOException {
+			final KeyMessage sendMessage = new KeyMessage(keyMessage);
+			sendMessage.setTargetAddress(deviceAddr);
+			sendMessage.setTargetActor(actorNr);
+			bus.sendKeyMessage(sendMessage);
 		}
 
 		@Override
