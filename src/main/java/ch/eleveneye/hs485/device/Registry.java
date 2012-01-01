@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,6 +147,18 @@ public class Registry {
 	public void commit() throws IOException {
 		for (final PhysicallyDevice dev : listPhysicalDevices())
 			dev.commit();
+	}
+
+	public synchronized <T> T doInTransaction(final Callable<T> callable) throws IOException {
+		try {
+			final T ret = callable.call();
+			commit();
+			return ret;
+		} catch (final Throwable e) {
+			log.warn("Error in Transaction", e);
+			rollback();
+			throw new RuntimeException(e);
+		}
 	}
 
 	public synchronized Actor getActor(final int address, final int actorNr) throws IOException {
