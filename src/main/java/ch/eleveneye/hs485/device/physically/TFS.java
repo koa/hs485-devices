@@ -65,6 +65,10 @@ public class TFS extends AbstractDevice {
 	}
 
 	@Override
+	public void clearAllInputTargets() throws IOException {
+	}
+
+	@Override
 	public Actor getActor(final int actorNr) throws IOException {
 		return null;
 	}

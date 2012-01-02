@@ -337,7 +337,9 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 	@Override
 	public void clearAllInputTargets() throws IOException {
 		super.clearAllInputTargets();
-		writeVariable(HS485D.VAR_DIRECT_OUTPUT, 0xfe);
+		writeVariable("input[0].direct-output", 0xfe);
+		writeVariable("input[1].direct-output", 0xfe);
+		// writeVariable(HS485D.VAR_DIRECT_OUTPUT, 0xfe);
 	}
 
 	@Override
