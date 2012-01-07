@@ -337,6 +337,7 @@ public class IO127 extends AbstractDevice {
 			final ConfigurableInputDescription input = new ConfigurableInputDescription();
 			input.setLabeledName(toString() + ": I" + (i + 1));
 			input.setSensorNr(i);
+			input.setImplementionSensor(IO127Sensor.class);
 			inputDescriptions.add(input);
 		}
 		return inputDescriptions;
@@ -349,6 +350,7 @@ public class IO127 extends AbstractDevice {
 			final ConfigurableOutputDescription outputDescription = new ConfigurableOutputDescription();
 			outputDescription.setLabeledName(toString() + ": Rel " + (i + 1));
 			outputDescription.setActorNr(i + 12);
+			outputDescription.setImplementingActor(IO127Actor.class);
 			ret.add(outputDescription);
 		}
 		return ret;

@@ -349,10 +349,12 @@ public class HS485S extends AbstractDevice implements PairedSensorDevice {
 		final ConfigurableInputDescription t1 = new ConfigurableInputDescription();
 		t1.setLabeledName(toString() + ": T1");
 		t1.setSensorNr(0);
+		t1.setImplementionSensor(HS485SSensor.class);
 		inputs.add(t1);
 		final ConfigurableInputDescription t2 = new ConfigurableInputDescription();
 		t2.setLabeledName(toString() + ": T2");
 		t2.setSensorNr(1);
+		t2.setImplementionSensor(HS485SSensor.class);
 		inputs.add(t2);
 		return inputs;
 	}
@@ -361,12 +363,14 @@ public class HS485S extends AbstractDevice implements PairedSensorDevice {
 	public List<ConfigurableOutputDescription> listConfigurableOutputs() {
 		final ArrayList<ConfigurableOutputDescription> outputs = new ArrayList<ConfigurableOutputDescription>(2);
 		final ConfigurableOutputDescription a1 = new ConfigurableOutputDescription();
-		a1.setLabeledName(toString() + ": REl 1");
+		a1.setLabeledName(toString() + ": Rel 1");
 		a1.setActorNr(0);
+		a1.setImplementingActor(HS485SActor.class);
 		outputs.add(a1);
 		final ConfigurableOutputDescription a2 = new ConfigurableOutputDescription();
-		a2.setLabeledName(toString() + ": REl 2");
+		a2.setLabeledName(toString() + ": Rel 2");
 		a2.setActorNr(1);
+		a2.setImplementingActor(HS485SActor.class);
 		outputs.add(a2);
 		return outputs;
 	}

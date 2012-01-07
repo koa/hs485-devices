@@ -105,6 +105,7 @@ public class TFS extends AbstractDevice {
 		final ConfigurableInputDescription inputDescription = new ConfigurableInputDescription();
 		inputDescription.setSensorNr(0);
 		inputDescription.setLabeledName(toString());
+		inputDescription.setImplementionSensor(TFSensorImpl.class);
 		return Collections.singletonList(inputDescription);
 	}
 
