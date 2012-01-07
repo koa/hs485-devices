@@ -17,6 +17,8 @@ import ch.eleveneye.hs485.device.KeyActor;
 import ch.eleveneye.hs485.device.KeySensor;
 import ch.eleveneye.hs485.device.Sensor;
 import ch.eleveneye.hs485.device.TimedActor;
+import ch.eleveneye.hs485.device.config.ConfigurableInputDescription;
+import ch.eleveneye.hs485.device.config.ConfigurableOutputDescription;
 import ch.eleveneye.hs485.device.config.TimeMode;
 import ch.eleveneye.hs485.device.utils.AbstractActor;
 import ch.eleveneye.hs485.device.utils.AbstractDevice;
@@ -326,6 +328,30 @@ public class IO127 extends AbstractDevice {
 	public synchronized Collection<Actor> listActors() throws IOException {
 		loadActors();
 		return new ArrayList<Actor>(actorList);
+	}
+
+	@Override
+	public List<ConfigurableInputDescription> listConfigurableInputs() {
+		final ArrayList<ConfigurableInputDescription> inputDescriptions = new ArrayList<ConfigurableInputDescription>(12);
+		for (int i = 0; i < 12; i++) {
+			final ConfigurableInputDescription input = new ConfigurableInputDescription();
+			input.setLabeledName(toString() + ": I" + (i + 1));
+			input.setSensorNr(i);
+			inputDescriptions.add(input);
+		}
+		return inputDescriptions;
+	}
+
+	@Override
+	public List<ConfigurableOutputDescription> listConfigurableOutputs() {
+		final ArrayList<ConfigurableOutputDescription> ret = new ArrayList<ConfigurableOutputDescription>(7);
+		for (int i = 0; i < 7; i++) {
+			final ConfigurableOutputDescription outputDescription = new ConfigurableOutputDescription();
+			outputDescription.setLabeledName(toString() + ": Rel " + (i + 1));
+			outputDescription.setActorNr(i + 12);
+			ret.add(outputDescription);
+		}
+		return ret;
 	}
 
 	@Override

@@ -4,13 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import ch.eleveneye.hs485.api.data.HwVer;
 import ch.eleveneye.hs485.api.data.SwVer;
 import ch.eleveneye.hs485.api.data.TFSValue;
 import ch.eleveneye.hs485.device.Sensor;
 import ch.eleveneye.hs485.device.TFSensor;
+import ch.eleveneye.hs485.device.config.ConfigurableInputDescription;
+import ch.eleveneye.hs485.device.config.ConfigurableOutputDescription;
 import ch.eleveneye.hs485.device.config.PairMode;
 import ch.eleveneye.hs485.device.utils.AbstractDevice;
 import ch.eleveneye.hs485.memory.ModuleType;
@@ -94,6 +98,19 @@ public class TFS extends AbstractDevice {
 	@Override
 	public Collection<Actor> listActors() throws IOException {
 		return new ArrayList<Actor>(0);
+	}
+
+	@Override
+	public List<ConfigurableInputDescription> listConfigurableInputs() {
+		final ConfigurableInputDescription inputDescription = new ConfigurableInputDescription();
+		inputDescription.setSensorNr(0);
+		inputDescription.setLabeledName(toString());
+		return Collections.singletonList(inputDescription);
+	}
+
+	@Override
+	public List<ConfigurableOutputDescription> listConfigurableOutputs() {
+		return Collections.emptyList();
 	}
 
 	@Override

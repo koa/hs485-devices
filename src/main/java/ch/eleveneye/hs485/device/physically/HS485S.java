@@ -18,6 +18,8 @@ import ch.eleveneye.hs485.device.KeyActor;
 import ch.eleveneye.hs485.device.KeySensor;
 import ch.eleveneye.hs485.device.Sensor;
 import ch.eleveneye.hs485.device.TimedActor;
+import ch.eleveneye.hs485.device.config.ConfigurableInputDescription;
+import ch.eleveneye.hs485.device.config.ConfigurableOutputDescription;
 import ch.eleveneye.hs485.device.config.PairMode;
 import ch.eleveneye.hs485.device.config.TimeMode;
 import ch.eleveneye.hs485.device.utils.AbstractActor;
@@ -339,6 +341,34 @@ public class HS485S extends AbstractDevice implements PairedSensorDevice {
 	public synchronized Collection<Actor> listActors() throws IOException {
 		loadActorList();
 		return new ArrayList<Actor>(actorList);
+	}
+
+	@Override
+	public List<ConfigurableInputDescription> listConfigurableInputs() {
+		final ArrayList<ConfigurableInputDescription> inputs = new ArrayList<ConfigurableInputDescription>(2);
+		final ConfigurableInputDescription t1 = new ConfigurableInputDescription();
+		t1.setLabeledName(toString() + ": T1");
+		t1.setSensorNr(0);
+		inputs.add(t1);
+		final ConfigurableInputDescription t2 = new ConfigurableInputDescription();
+		t2.setLabeledName(toString() + ": T2");
+		t2.setSensorNr(1);
+		inputs.add(t2);
+		return inputs;
+	}
+
+	@Override
+	public List<ConfigurableOutputDescription> listConfigurableOutputs() {
+		final ArrayList<ConfigurableOutputDescription> outputs = new ArrayList<ConfigurableOutputDescription>(2);
+		final ConfigurableOutputDescription a1 = new ConfigurableOutputDescription();
+		a1.setLabeledName(toString() + ": REl 1");
+		a1.setActorNr(0);
+		outputs.add(a1);
+		final ConfigurableOutputDescription a2 = new ConfigurableOutputDescription();
+		a2.setLabeledName(toString() + ": REl 2");
+		a2.setActorNr(1);
+		outputs.add(a2);
+		return outputs;
 	}
 
 	@Override

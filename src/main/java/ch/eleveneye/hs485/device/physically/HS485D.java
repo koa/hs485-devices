@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +23,8 @@ import ch.eleveneye.hs485.device.KeyActor;
 import ch.eleveneye.hs485.device.KeySensor;
 import ch.eleveneye.hs485.device.Sensor;
 import ch.eleveneye.hs485.device.TimedActor;
+import ch.eleveneye.hs485.device.config.ConfigurableInputDescription;
+import ch.eleveneye.hs485.device.config.ConfigurableOutputDescription;
 import ch.eleveneye.hs485.device.config.DimmerMode;
 import ch.eleveneye.hs485.device.config.PairMode;
 import ch.eleveneye.hs485.device.config.TimeMode;
@@ -376,6 +379,28 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 	public synchronized Collection<Actor> listActors() throws IOException {
 		loadActorList();
 		return new ArrayList<Actor>(actorList);
+	}
+
+	@Override
+	public List<ConfigurableInputDescription> listConfigurableInputs() {
+		final ArrayList<ConfigurableInputDescription> inputs = new ArrayList<ConfigurableInputDescription>(2);
+		final ConfigurableInputDescription t1 = new ConfigurableInputDescription();
+		t1.setLabeledName(toString() + ": T1");
+		t1.setSensorNr(0);
+		inputs.add(t1);
+		final ConfigurableInputDescription t2 = new ConfigurableInputDescription();
+		t2.setLabeledName(toString() + ": T2");
+		t2.setSensorNr(1);
+		inputs.add(t2);
+		return inputs;
+	}
+
+	@Override
+	public List<ConfigurableOutputDescription> listConfigurableOutputs() {
+		final ConfigurableOutputDescription output = new ConfigurableOutputDescription();
+		output.setActorNr(0);
+		output.setLabeledName(toString() + " L'");
+		return Collections.singletonList(output);
 	}
 
 	@Override
