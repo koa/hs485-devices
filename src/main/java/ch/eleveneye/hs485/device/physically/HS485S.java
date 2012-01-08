@@ -177,7 +177,10 @@ public class HS485S extends AbstractDevice implements PairedSensorDevice {
 		@Override
 		public void registerHandler(final MessageHandler handler) throws IOException {
 			bus.addKeyHandler(deviceAddr, (byte) sensorNr, handler);
-			addInputTargetRaw(sensorNr, bus.listOwnAddresse()[0], 1);
+			if (handler != null)
+				addInputTargetRaw(sensorNr, bus.listOwnAddresse()[0], 1);
+			else
+				removeInputTargetRaw(sensorNr, bus.listOwnAddresse()[0], 1);
 		}
 
 		@Override
