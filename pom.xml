@@ -13,6 +13,10 @@
   <artifactId>devices</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <description>Access to Devices for HS485</description>
+  <properties>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+  </properties>
   <scm>
     <connection>scm:git:git://github.com/koa/hs485-devices.git</connection>
     <developerConnection>scm:git:git@github.com:koa/hs485-devices.git</developerConnection>
@@ -45,14 +49,14 @@
   </dependencies>
   <repositories>
     <repository>
-      <id>Neptun</id>
-      <name>Neptun-releases</name>
-      <url>http://nexus.berg-turbenthal.ch/content/repositories/releases/</url>
+      <id>koa-releases</id>
+      <name>Releases Repository</name>
+      <url>https://nexus.berg-turbenthal.ch/repository/maven-releases/</url>
     </repository>
     <repository>
-      <id>Neptun-snapshot</id>
-      <name>Neptun-snapshots</name>
-      <url>http://nexus.berg-turbenthal.ch/content/repositories/snapshots/</url>
+      <id>koa-snapshots</id>
+      <name>Snapshots Repository</name>
+      <url>https://nexus.berg-turbenthal.ch/repository/maven-snapshots</url>
     </repository>
   </repositories>
 </project>

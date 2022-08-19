@@ -23,18 +23,16 @@ public class TFS extends AbstractDevice {
 
 	protected class TFSensorImpl implements TFSensor, PhysicallySensor {
 
-		LinkedList<Actor>	registeredActors;
+		LinkedList<Actor> registeredActors;
 
 		public TFSensorImpl() {
 			registeredActors = new LinkedList<Actor>();
 		}
 
-		@Override
 		public int getModuleAddr() {
 			return deviceAddr;
 		}
 
-		@Override
 		public int getSensorNr() {
 			return 0;
 		}
@@ -43,7 +41,6 @@ public class TFS extends AbstractDevice {
 			return registeredActors;
 		}
 
-		@Override
 		public TFSValue readTF() throws IOException {
 			return bus.readTemp(deviceAddr);
 		}
@@ -62,7 +59,7 @@ public class TFS extends AbstractDevice {
 		return Arrays.asList(new ModuleType[] { tfsv13 });
 	}
 
-	private final TFSensorImpl	sensor;
+	private final TFSensorImpl sensor;
 
 	public TFS() {
 		sensor = new TFSensorImpl();
@@ -72,12 +69,10 @@ public class TFS extends AbstractDevice {
 	public void clearAllInputTargets() throws IOException {
 	}
 
-	@Override
 	public Actor getActor(final int actorNr) throws IOException {
 		return null;
 	}
 
-	@Override
 	public int getActorCount() {
 		return 0;
 	}
@@ -90,17 +85,14 @@ public class TFS extends AbstractDevice {
 		return null;
 	}
 
-	@Override
 	public PhysicallySensor getSensor(final int sensorNr) throws IOException {
 		return sensor;
 	}
 
-	@Override
 	public Collection<Actor> listActors() throws IOException {
 		return new ArrayList<Actor>(0);
 	}
 
-	@Override
 	public List<ConfigurableInputDescription> listConfigurableInputs() {
 		final ConfigurableInputDescription inputDescription = new ConfigurableInputDescription();
 		inputDescription.setSensorNr(0);
@@ -109,12 +101,10 @@ public class TFS extends AbstractDevice {
 		return Collections.singletonList(inputDescription);
 	}
 
-	@Override
 	public List<ConfigurableOutputDescription> listConfigurableOutputs() {
 		return Collections.emptyList();
 	}
 
-	@Override
 	public Collection<Sensor> listSensors() throws IOException {
 		return Arrays.asList(new Sensor[] { sensor });
 	}

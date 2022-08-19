@@ -36,12 +36,10 @@ public class IO127 extends AbstractDevice {
 			super(actorNr);
 		}
 
-		@Override
 		public int getModuleAddr() {
 			return deviceAddr;
 		}
 
-		@Override
 		public TimeMode getTimeMode() throws IOException {
 			switch (readVariable("output[" + (actorNr - 12) + "].timer-mode")) {
 			case 0xff:
@@ -55,22 +53,18 @@ public class IO127 extends AbstractDevice {
 			return null;
 		}
 
-		@Override
 		public int getTimeValue() throws IOException {
 			return readVariable("output-time[" + (actorNr - 12) + "].time");
 		}
 
-		@Override
 		public boolean getToggleBit() throws IOException {
 			return readVariable("output[" + (actorNr - 12) + "].toggle") != 0;
 		}
 
-		@Override
 		public boolean isOn() throws IOException {
 			return bus.readActor(deviceAddr, (byte) actorNr) > 0;
 		}
 
-		@Override
 		public void sendKeyMessage(final KeyMessage keyMessage) throws IOException {
 			final KeyMessage sendMessage = new KeyMessage(keyMessage);
 			sendMessage.setTargetAddress(deviceAddr);
@@ -78,18 +72,15 @@ public class IO127 extends AbstractDevice {
 			bus.sendKeyMessage(sendMessage);
 		}
 
-		@Override
 		public void setOff() throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0x00);
 
 		}
 
-		@Override
 		public void setOn() throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0x01);
 		}
 
-		@Override
 		public void setTimeMode(final TimeMode value) throws IOException {
 			final String variableName = "output[" + (actorNr - 12) + "].timer-mode";
 			switch (value) {
@@ -105,17 +96,14 @@ public class IO127 extends AbstractDevice {
 			}
 		}
 
-		@Override
 		public void setTimeValue(final int value) throws IOException {
 			writeVariable("output-time[" + (actorNr - 12) + "].time", value);
 		}
 
-		@Override
 		public void setToggleBit(final boolean value) throws IOException {
 			writeVariable("output[" + (actorNr - 12) + "].toggle", value ? 0xff : 0x00);
 		}
 
-		@Override
 		public void toggle() throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0xff);
 		}
@@ -132,12 +120,10 @@ public class IO127 extends AbstractDevice {
 			super(sensorNr);
 		}
 
-		@Override
 		public void addActor(final Actor target) throws IOException {
 			addInputTargetRaw(sensorNr, target.getModuleAddr(), target.getActorNr());
 		}
 
-		@Override
 		public InputMode getInputMode() throws IOException {
 			switch (readVariable("input[" + sensorNr + "].type")) {
 			case 1:
@@ -149,17 +135,14 @@ public class IO127 extends AbstractDevice {
 			}
 		}
 
-		@Override
 		public int getModuleAddr() {
 			return deviceAddr;
 		}
 
-		@Override
 		public Collection<Actor> listAssignedActors() throws IOException {
 			return listAssignedActorsRaw(sensorNr);
 		}
 
-		@Override
 		public void registerHandler(final MessageHandler handler) throws IOException {
 			bus.addKeyHandler(deviceAddr, (byte) sensorNr, handler);
 			if (handler != null)
@@ -168,12 +151,10 @@ public class IO127 extends AbstractDevice {
 				removeInputTargetRaw(sensorNr, bus.listOwnAddresse()[0], 1);
 		}
 
-		@Override
 		public void removeActor(final Actor target) throws IOException {
 			removeInputTargetRaw(sensorNr, target.getModuleAddr(), target.getActorNr());
 		}
 
-		@Override
 		public void setInputMode(final InputMode inputMode) throws IOException {
 			switch (inputMode) {
 			case UP:
@@ -307,18 +288,15 @@ public class IO127 extends AbstractDevice {
 
 	private LinkedList<PhysicallySensor>	sensorList;
 
-	@Override
 	public Actor getActor(final int actorNr) throws IOException {
 		loadActors();
 		return actorList.get(actorNr - 12);
 	}
 
-	@Override
 	public int getActorCount() {
 		return ACTOR_COUNT;
 	}
 
-	@Override
 	public PhysicallySensor getSensor(final int sensorNr) throws IOException {
 		loadSensorList();
 		for (final PhysicallySensor physicallySensor : sensorList)
@@ -327,13 +305,11 @@ public class IO127 extends AbstractDevice {
 		return null;
 	}
 
-	@Override
 	public synchronized Collection<Actor> listActors() throws IOException {
 		loadActors();
 		return new ArrayList<Actor>(actorList);
 	}
 
-	@Override
 	public List<ConfigurableInputDescription> listConfigurableInputs() {
 		final ArrayList<ConfigurableInputDescription> inputDescriptions = new ArrayList<ConfigurableInputDescription>(12);
 		for (int i = 0; i < 12; i++) {
@@ -346,7 +322,6 @@ public class IO127 extends AbstractDevice {
 		return inputDescriptions;
 	}
 
-	@Override
 	public List<ConfigurableOutputDescription> listConfigurableOutputs() {
 		final ArrayList<ConfigurableOutputDescription> ret = new ArrayList<ConfigurableOutputDescription>(7);
 		for (int i = 0; i < 7; i++) {
@@ -359,15 +334,9 @@ public class IO127 extends AbstractDevice {
 		return ret;
 	}
 
-	@Override
 	public synchronized Collection<Sensor> listSensors() throws IOException {
 		loadSensorList();
 		return new ArrayList<Sensor>(sensorList);
-	}
-
-	@Override
-	public String toString() {
-		return "IO127-" + super.toString();
 	}
 
 	private synchronized void loadActors() {
@@ -384,5 +353,10 @@ public class IO127 extends AbstractDevice {
 			for (int i = 0; i < IO127.SENSOR_COUNT; i += 1)
 				sensorList.add(new IO127Sensor(i));
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "IO127-" + super.toString();
 	}
 }

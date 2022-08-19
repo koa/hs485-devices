@@ -1,13 +1,13 @@
 package ch.eleveneye.hs485.device.virtual;
 
 public class DimmActorData implements EventData {
-	public static final int MAX_DIMM_VALUE = 0x0f;
+	public static final int	MAX_DIMM_VALUE	= 0x0f;
 
-	int dimmValue;
+	int											dimmValue;
 
-	long eventTime;
+	long										eventTime;
 
-	public DimmActorData(int dimmValue) {
+	public DimmActorData(final int dimmValue) {
 		this.dimmValue = dimmValue;
 		this.eventTime = System.currentTimeMillis();
 	}
@@ -16,7 +16,6 @@ public class DimmActorData implements EventData {
 		return dimmValue;
 	}
 
-	@Override
 	public long getEventTime() {
 		return eventTime;
 	}

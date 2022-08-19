@@ -10,42 +10,37 @@ import ch.eleveneye.hs485.device.virtual.EventSource;
 
 public class DefaultEventSource<E extends EventData> implements EventSource<E> {
 
-	Collection<EventSink<E>> registeredSinks = new ArrayList<EventSink<E>>();
+	Collection<EventSink<E>>	registeredSinks	= new ArrayList<EventSink<E>>();
 
-	String roleName;
+	String										roleName;
 
-	public DefaultEventSource(String roleName) {
+	public DefaultEventSource(final String roleName) {
 		this.roleName = roleName;
 	}
 
-	@Override
-	public void addSink(EventSink<E> sink) {
+	public void addSink(final EventSink<E> sink) {
 		registeredSinks.add(sink);
 	}
 
-	@Override
-	public void removeSink(EventSink<E> sink) {
-		registeredSinks.remove(sink);
-	}
-
-	public void fireEvent(E event) {
-		for (EventSink<E> sink : registeredSinks)
+	public void fireEvent(final E event) {
+		for (final EventSink<E> sink : registeredSinks)
 			sink.takeEvent(event);
 	}
 
-	@Override
 	public String getRoleName() {
 		return roleName;
 	}
 
-	@Override
+	public Collection<EventSink<E>> listAllSinks() {
+		return Collections.unmodifiableCollection(registeredSinks);
+	}
+
 	public void removeAllSinks() {
 		registeredSinks.clear();
 	}
 
-	@Override
-	public Collection<EventSink<E>> listAllSinks() {
-		return Collections.unmodifiableCollection(registeredSinks);
+	public void removeSink(final EventSink<E> sink) {
+		registeredSinks.remove(sink);
 	}
 
 }

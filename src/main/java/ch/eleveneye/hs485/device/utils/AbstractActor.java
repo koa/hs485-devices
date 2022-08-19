@@ -11,7 +11,6 @@ public abstract class AbstractActor implements SwitchingActor, Actor {
 		this.actorNr = actorNr;
 	}
 
-	@Override
 	public int getActorNr() {
 		return actorNr;
 	}

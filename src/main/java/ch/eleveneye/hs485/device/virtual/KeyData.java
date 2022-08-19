@@ -9,13 +9,13 @@ public class KeyData implements EventData {
 		TOGGLE, UP, DOWN
 	}
 
-	long eventTime;
+	long	eventTime;
 
-	Event event;
+	Event	event;
 
-	Key key;
+	Key		key;
 
-	public KeyData(Key key, Event event) {
+	public KeyData(final Key key, final Event event) {
 		super();
 		this.key = key;
 		this.event = event;
@@ -26,12 +26,11 @@ public class KeyData implements EventData {
 		return event;
 	}
 
-	public Key getKey() {
-		return key;
-	}
-
-	@Override
 	public long getEventTime() {
 		return eventTime;
+	}
+
+	public Key getKey() {
+		return key;
 	}
 }

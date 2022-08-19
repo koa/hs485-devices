@@ -44,7 +44,6 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 			super(0);
 		}
 
-		@Override
 		public DimmerMode getDimmerMode() throws IOException {
 			switch (readVariable("dimmer-mode")) {
 			case 0x0ff:
@@ -56,22 +55,18 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 			return null;
 		}
 
-		@Override
 		public int getDimmValue() throws IOException {
 			return bus.readActor(deviceAddr, (byte) actorNr);
 		}
 
-		@Override
 		public int getMaxValue() throws IOException {
 			return 0x0f;
 		}
 
-		@Override
 		public int getModuleAddr() {
 			return deviceAddr;
 		}
 
-		@Override
 		public TimeMode getTimeMode() throws IOException {
 			switch (readVariable("timer-mode")) {
 			case 0xff:
@@ -85,23 +80,19 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 			return null;
 		}
 
-		@Override
 		public int getTimeValue() throws IOException {
 			return readVariable("time");
 		}
 
-		@Override
 		public boolean getToggleBit() throws IOException {
 			final int value = readVariable("toggle-value");
 			return (value & 0x01) != 0;
 		}
 
-		@Override
 		public boolean isOn() throws IOException {
 			return bus.readActor(deviceAddr, (byte) actorNr) > 0;
 		}
 
-		@Override
 		public void sendKeyMessage(final KeyMessage keyMessage) throws IOException {
 			final KeyMessage sendMessage = new KeyMessage(keyMessage);
 			sendMessage.setTargetAddress(deviceAddr);
@@ -109,7 +100,6 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 			bus.sendKeyMessage(sendMessage);
 		}
 
-		@Override
 		public void setDimmerMode(final DimmerMode value) throws IOException {
 			switch (value) {
 			case FULL_BRIGHNESS:
@@ -121,23 +111,19 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 			}
 		}
 
-		@Override
 		public void setDimmValue(final int value) throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) value);
 		}
 
-		@Override
 		public void setOff() throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0x00);
 
 		}
 
-		@Override
 		public void setOn() throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0x10);
 		}
 
-		@Override
 		public void setTimeMode(final TimeMode value) throws IOException {
 			switch (value) {
 			case NONE:
@@ -152,19 +138,16 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 			}
 		}
 
-		@Override
 		public void setTimeValue(final int value) throws IOException {
 			writeVariable("time", value);
 		}
 
-		@Override
 		public void setToggleBit(final boolean value) throws IOException {
 			final int oldValue = readVariable("toggle-value");
 			writeVariable("toggle-value", oldValue & 0xfe | (value ? 0 : 1));
 
 		}
 
-		@Override
 		public void toggle() throws IOException {
 			bus.writeActor(deviceAddr, (byte) actorNr, (byte) 0xff);
 		}
@@ -180,7 +163,6 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 			super(sensorNr);
 		}
 
-		@Override
 		public void addActor(final Actor target) throws IOException {
 			if (target.getModuleAddr() == deviceAddr)
 				writeVariable("input[" + sensorNr + "].direct-output", 0xff);
@@ -188,17 +170,14 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 				addInputTargetRaw(sensorNr, target.getModuleAddr(), target.getActorNr());
 		}
 
-		@Override
 		public int getModuleAddr() {
 			return deviceAddr;
 		}
 
-		@Override
 		public boolean isPaired() throws IOException {
 			return isSensorPaired();
 		}
 
-		@Override
 		public Collection<Actor> listAssignedActors() throws IOException {
 			loadActorList();
 			final Collection<Actor> ret = listAssignedActorsRaw(sensorNr);
@@ -208,7 +187,6 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 			return ret;
 		}
 
-		@Override
 		public void registerHandler(final MessageHandler handler) throws IOException {
 			bus.addKeyHandler(deviceAddr, (byte) sensorNr, handler);
 			if (handler != null)
@@ -217,7 +195,6 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 				removeInputTargetRaw(sensorNr, bus.listOwnAddresse()[0], 1);
 		}
 
-		@Override
 		public void removeActor(final Actor target) throws IOException {
 			final String variableName = "input[" + sensorNr + "].direct-output";
 			if (target.getModuleAddr() == deviceAddr)
@@ -348,28 +325,23 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 		// writeVariable(HS485D.VAR_DIRECT_OUTPUT, 0xfe);
 	}
 
-	@Override
 	public Actor getActor(final int actorNr) throws IOException {
 		loadActorList();
 		return actorList.get(actorNr);
 	}
 
-	@Override
 	public int getActorCount() {
 		return 1;
 	}
 
-	@Override
 	public int getInputPairCount() {
 		return 1;
 	}
 
-	@Override
 	public PairMode getInputPairMode(final int pairNr) throws IOException {
 		return isSensorPaired() ? PairMode.JOINT : PairMode.SPLIT;
 	}
 
-	@Override
 	public PhysicallySensor getSensor(final int sensorNr) throws IOException {
 		loadSensorList();
 		for (final PhysicallySensor physicallySensor : sensorList)
@@ -378,13 +350,15 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 		return null;
 	}
 
-	@Override
+	private boolean isSensorPaired() throws IOException {
+		return readVariable(HS485D.VAR_INPUT_TYPE) == 0x01;
+	}
+
 	public synchronized Collection<Actor> listActors() throws IOException {
 		loadActorList();
 		return new ArrayList<Actor>(actorList);
 	}
 
-	@Override
 	public List<ConfigurableInputDescription> listConfigurableInputs() {
 		final ArrayList<ConfigurableInputDescription> inputs = new ArrayList<ConfigurableInputDescription>(2);
 		final ConfigurableInputDescription t1 = new ConfigurableInputDescription();
@@ -400,7 +374,6 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 		return inputs;
 	}
 
-	@Override
 	public List<ConfigurableOutputDescription> listConfigurableOutputs() {
 		final ConfigurableOutputDescription output = new ConfigurableOutputDescription();
 		output.setActorNr(0);
@@ -409,25 +382,9 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 		return Collections.singletonList(output);
 	}
 
-	@Override
 	public synchronized Collection<Sensor> listSensors() throws IOException {
 		loadSensorList();
 		return new ArrayList<Sensor>(sensorList);
-	}
-
-	@Override
-	public synchronized void setInputPairMode(final int pairNr, final PairMode mode) throws IOException {
-		writeVariable(HS485D.VAR_INPUT_TYPE, mode == PairMode.JOINT ? 0x01 : 0x00);
-		sensorList = null;
-	}
-
-	@Override
-	public String toString() {
-		return "D-" + Integer.toHexString(deviceAddr);
-	}
-
-	private boolean isSensorPaired() throws IOException {
-		return readVariable(HS485D.VAR_INPUT_TYPE) == 0x01;
 	}
 
 	private void loadActorList() {
@@ -441,6 +398,16 @@ public class HS485D extends AbstractDevice implements PairedSensorDevice {
 				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485DSensor(0) });
 			else
 				sensorList = Arrays.asList(new PhysicallySensor[] { new HS485DSensor(0), new HS485DSensor(1) });
+	}
+
+	public synchronized void setInputPairMode(final int pairNr, final PairMode mode) throws IOException {
+		writeVariable(HS485D.VAR_INPUT_TYPE, mode == PairMode.JOINT ? 0x01 : 0x00);
+		sensorList = null;
+	}
+
+	@Override
+	public String toString() {
+		return "D-" + Integer.toHexString(deviceAddr);
 	}
 
 }

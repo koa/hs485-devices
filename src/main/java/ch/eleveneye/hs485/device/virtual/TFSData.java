@@ -31,7 +31,6 @@ public class TFSData implements EventData {
 		return true;
 	}
 
-	@Override
 	public long getEventTime() {
 		return eventTime;
 	}

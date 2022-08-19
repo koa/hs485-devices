@@ -145,6 +145,36 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 
 	protected boolean			reloadOnCommit;
 
+	protected void addInputTargetRaw(final int inputNr, final int targetAddress, final int targetNr) throws IOException {
+		int firstFree = -1;
+		final int configCount = ((ArrayVariable) currentConfig.getVariableByName("target")).getCount();
+		for (int i = 0; i < configCount; i += 1) {
+			final int currentInput = readVariable("target[" + i + "].input-nr");
+			final int currentTargetAddr = readVariable("target[" + i + "].target-addr");
+			final int currentTargetNr = readVariable("target[" + i + "].target-nr");
+			if (currentInput == 0xff || currentTargetAddr == -1 || currentTargetNr == 0xff) {
+				if (firstFree < 0)
+					firstFree = i;
+			} else if (currentInput == inputNr && currentTargetAddr == targetAddress && currentTargetNr == targetNr)
+				// Ziel ist schon programmiert
+				return;
+		}
+		if (firstFree == -1)
+			throw new IllegalArgumentException("Auf dem Modul " + this + " sind schon alle Konfigurations-Register belegt");
+		writeVariable("target[" + firstFree + "].input-nr", inputNr);
+		writeVariable("target[" + firstFree + "].target-addr", targetAddress);
+		writeVariable("target[" + firstFree + "].target-nr", targetNr);
+	}
+
+	private synchronized void checkMemory() throws IOException {
+		if (oldMemory == null) {
+			oldMemory = bus.readModuleEEPROM(deviceAddr, currentConfig.getEepromSize());
+			currentMemory = new byte[oldMemory.length];
+			System.arraycopy(oldMemory, 0, currentMemory, 0, oldMemory.length);
+			reloadOnCommit = false;
+		}
+	}
+
 	public void clearAllInputTargets() throws IOException {
 		final int configCount = ((ArrayVariable) currentConfig.getVariableByName("target")).getCount();
 		for (int i = 0; i < configCount; i += 1) {
@@ -154,7 +184,6 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		}
 	}
 
-	@Override
 	public synchronized void commit() throws IOException {
 		if (oldMemory == null)
 			return;
@@ -201,6 +230,12 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+
 	public synchronized <T> T doInTransaction(final Callable<T> callable) throws IOException {
 		try {
 			final T ret = callable.call();
@@ -211,108 +246,6 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 			rollback();
 			throw new RuntimeException(e);
 		}
-	}
-
-	public void dumpVariables() throws IOException {
-		final Collection<Variable> variables = currentConfig.listVariables();
-		dumpVariable(variables, "", 0);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final AbstractDevice other = (AbstractDevice) obj;
-		if (bus == null) {
-			if (other.bus != null)
-				return false;
-		} else if (!bus.equals(other.bus))
-			return false;
-		if (deviceAddr != other.deviceAddr)
-			return false;
-		return true;
-	}
-
-	@Override
-	public int getAddress() {
-		return deviceAddr;
-	}
-
-	@Override
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + (bus == null ? 0 : bus.hashCode());
-		result = PRIME * result + deviceAddr;
-		return result;
-	}
-
-	@Override
-	public void init(final int deviceAddr, final Registry registry, final ModuleType config) {
-		this.deviceAddr = deviceAddr;
-		this.registry = registry;
-		bus = registry.getBus();
-		currentConfig = config;
-		oldMemory = null;
-		currentMemory = null;
-	}
-
-	public synchronized byte[] readCurrentMemory() {
-		final byte[] ret = new byte[currentMemory.length];
-		System.arraycopy(currentMemory, 0, ret, 0, ret.length);
-		return ret;
-	}
-
-	@Override
-	public synchronized void reset() throws IOException {
-		checkMemory();
-		reloadOnCommit = true;
-		for (int i = 0; i < currentMemory.length; i++)
-			currentMemory[i] = -1;
-		clearAllInputTargets();
-	}
-
-	@Override
-	public synchronized void rollback() throws IOException {
-		checkMemory();
-		reloadOnCommit = false;
-		System.arraycopy(oldMemory, 0, currentMemory, 0, oldMemory.length);
-	}
-
-	@Override
-	public String toString() {
-		return "Device: " + Integer.toHexString(deviceAddr);
-
-	}
-
-	protected void addInputTargetRaw(final int inputNr, final int targetAddress, final int targetNr) throws IOException {
-		int firstFree = -1;
-		final int configCount = ((ArrayVariable) currentConfig.getVariableByName("target")).getCount();
-		for (int i = 0; i < configCount; i += 1) {
-			final int currentInput = readVariable("target[" + i + "].input-nr");
-			final int currentTargetAddr = readVariable("target[" + i + "].target-addr");
-			final int currentTargetNr = readVariable("target[" + i + "].target-nr");
-			if (currentInput == 0xff || currentTargetAddr == -1 || currentTargetNr == 0xff) {
-				if (firstFree < 0)
-					firstFree = i;
-			} else if (currentInput == inputNr && currentTargetAddr == targetAddress && currentTargetNr == targetNr)
-				// Ziel ist schon programmiert
-				return;
-		}
-		if (firstFree == -1)
-			throw new IllegalArgumentException("Auf dem Modul " + this + " sind schon alle Konfigurations-Register belegt");
-		writeVariable("target[" + firstFree + "].input-nr", inputNr);
-		writeVariable("target[" + firstFree + "].target-addr", targetAddress);
-		writeVariable("target[" + firstFree + "].target-nr", targetNr);
 	}
 
 	protected void dumpVariable(final Collection<Variable> var, final String baseName, final int depth) throws IOException {
@@ -341,6 +274,52 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		}
 	}
 
+	public void dumpVariables() throws IOException {
+		final Collection<Variable> variables = currentConfig.listVariables();
+		dumpVariable(variables, "", 0);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final AbstractDevice other = (AbstractDevice) obj;
+		if (bus == null) {
+			if (other.bus != null)
+				return false;
+		} else if (!bus.equals(other.bus))
+			return false;
+		if (deviceAddr != other.deviceAddr)
+			return false;
+		return true;
+	}
+
+	public int getAddress() {
+		return deviceAddr;
+	}
+
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + (bus == null ? 0 : bus.hashCode());
+		result = PRIME * result + deviceAddr;
+		return result;
+	}
+
+	public void init(final int deviceAddr, final Registry registry, final ModuleType config) {
+		this.deviceAddr = deviceAddr;
+		this.registry = registry;
+		bus = registry.getBus();
+		currentConfig = config;
+		oldMemory = null;
+		currentMemory = null;
+	}
+
 	protected Collection<Actor> listAssignedActorsRaw(final int sensor) throws IOException {
 		final Collection<Actor> ret = new LinkedList<Actor>();
 		final int configCount = ((ArrayVariable) currentConfig.getVariableByName("target")).getCount();
@@ -357,9 +336,25 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		return ret;
 	}
 
+	public synchronized byte[] readCurrentMemory() {
+		final byte[] ret = new byte[currentMemory.length];
+		System.arraycopy(currentMemory, 0, ret, 0, ret.length);
+		return ret;
+	}
+
 	protected int readVariable(final String name) throws IOException {
 		final MemDescription resolved = resolveName(name);
 		return readVariableRaw(resolved);
+	}
+
+	private synchronized int readVariableRaw(final MemDescription resolved) throws IOException {
+		checkMemory();
+		final int address = resolved.getMemAddr();
+		final int length = resolved.getLength();
+		int ret = 0;
+		for (int i = 0; i < length; i += 1)
+			ret = ret << 8 | currentMemory[address + i] & 0xff;
+		return ret;
 	}
 
 	protected String readVariableResolved(final String name) throws IOException {
@@ -394,6 +389,14 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		}
 	}
 
+	public synchronized void reset() throws IOException {
+		checkMemory();
+		reloadOnCommit = true;
+		for (int i = 0; i < currentMemory.length; i++)
+			currentMemory[i] = -1;
+		clearAllInputTargets();
+	}
+
 	protected MemDescription resolveName(final String name) {
 		final String[] nameParts = name.split("\\.");
 		ArrayVariable lastArray = null;
@@ -423,8 +426,8 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 			if (nextVariable instanceof ArrayVariable) {
 				lastArray = (ArrayVariable) nextVariable;
 				if (index >= lastArray.getCount())
-					throw new ArrayIndexOutOfBoundsException("Array " + partName + " enthält nur " + lastArray.getCount() + " Elemente, index " + index
-							+ " ist ungültig");
+					throw new ArrayIndexOutOfBoundsException(
+							"Array " + partName + " enthält nur " + lastArray.getCount() + " Elemente, index " + index + " ist ungültig");
 				curentOffset += lastArray.getStep() * index;
 			} else {
 				int length = 0;
@@ -439,6 +442,18 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 		return null;
 	}
 
+	public synchronized void rollback() throws IOException {
+		checkMemory();
+		reloadOnCommit = false;
+		System.arraycopy(oldMemory, 0, currentMemory, 0, oldMemory.length);
+	}
+
+	@Override
+	public String toString() {
+		return "Device: " + Integer.toHexString(deviceAddr);
+
+	}
+
 	protected void writeChoice(final String name, final String value) throws IOException {
 		final MemDescription resolved = resolveName(name);
 		final ChoiceVariable variable = (ChoiceVariable) resolved.getElementDescr();
@@ -447,25 +462,6 @@ public abstract class AbstractDevice implements PhysicallyDevice {
 
 	protected void writeVariable(final String name, final int value) throws IOException {
 		writeVariableRaw(value, resolveName(name));
-	}
-
-	private synchronized void checkMemory() throws IOException {
-		if (oldMemory == null) {
-			oldMemory = bus.readModuleEEPROM(deviceAddr, currentConfig.getEepromSize());
-			currentMemory = new byte[oldMemory.length];
-			System.arraycopy(oldMemory, 0, currentMemory, 0, oldMemory.length);
-			reloadOnCommit = false;
-		}
-	}
-
-	private synchronized int readVariableRaw(final MemDescription resolved) throws IOException {
-		checkMemory();
-		final int address = resolved.getMemAddr();
-		final int length = resolved.getLength();
-		int ret = 0;
-		for (int i = 0; i < length; i += 1)
-			ret = ret << 8 | currentMemory[address + i] & 0xff;
-		return ret;
 	}
 
 	private synchronized void writeVariableRaw(final int value, final MemDescription resolved) throws IOException {

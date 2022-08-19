@@ -14,26 +14,22 @@ public abstract class AbstractSensor implements PhysicallySensor, KeySensor {
 		this.sensorNr = sensorNr;
 	}
 
-	@Override
-	public int getSensorNr() {
-		return sensorNr;
-	}
-
-	@Override
-	public String toString() {
-		return "Sensor " + Integer.toHexString(getModuleAddr()) + ":"
-				+ sensorNr;
-	}
-
 	public int getPairNr() {
 		return sensorNr / 2;
 	}
 
-	@Override
+	public int getSensorNr() {
+		return sensorNr;
+	}
+
 	public void removeAllActors() throws IOException {
-		for (Actor actor : listAssignedActors()) {
+		for (final Actor actor : listAssignedActors())
 			removeActor(actor);
-		}
+	}
+
+	@Override
+	public String toString() {
+		return "Sensor " + Integer.toHexString(getModuleAddr()) + ":" + sensorNr;
 	}
 
 }

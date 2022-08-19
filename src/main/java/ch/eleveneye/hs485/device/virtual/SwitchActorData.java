@@ -5,11 +5,11 @@ public class SwitchActorData implements EventData {
 		ON, OFF, TOGGLE
 	}
 
-	protected long eventTime;
+	protected long				eventTime;
 
-	protected SwitchEvent event;
+	protected SwitchEvent	event;
 
-	public SwitchActorData(SwitchEvent event) {
+	public SwitchActorData(final SwitchEvent event) {
 		this.event = event;
 		this.eventTime = System.currentTimeMillis();
 	}
@@ -18,7 +18,6 @@ public class SwitchActorData implements EventData {
 		return event;
 	}
 
-	@Override
 	public long getEventTime() {
 		return eventTime;
 	}
